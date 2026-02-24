@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flip - Dashboard | LOJADAICALMON</title>
+
+  <!-- Google Fonts - Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Quasar CSS v1.22.10 -->
+  <link href="https://cdn.jsdelivr.net/npm/quasar@1.22.10/dist/quasar.min.css" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Roboto, -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #f5f5f5;
+      color: #3E4956;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       HEADER (Flip real style - simplified without sidebar)
+    ============================================================ */
+    .header {
+      background: #fff;
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-brand {
+      font-size: 16px;
+      font-weight: 900;
+      color: #3E4956;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: #3E4956;
+    }
+
+    .header-btn:hover { background: #f8fafc; }
+
+    .header-btn .material-icons { font-size: 20px; }
+
+    .header-notification-wrap { position: relative; display: inline-flex; }
+
+    .notification-badge {
+      position: absolute; top: 0; right: 0;
+      background: #027BE3; color: #fff; font-size: 10px; font-weight: 700;
+      padding: 1px 5px; border-radius: 4px; min-width: 16px; height: 16px;
+      line-height: 14px; text-align: center; transform: translate(30%, -30%);
+    }
+
+    .header-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #ff56a1; color: #fff; display: flex;
+      align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px;
+    }
+
+    /* ============================================================
+       PAGE CONTENT
+    ============================================================ */
+    .page { max-width: 1400px; margin: 0 auto; padding: 20px 24px; }
+
+    /* Copy bar */
+    .copy-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .copy-bar-label {
+      font-size: 12px;
+      color: #79899D;
+      white-space: nowrap;
+    }
+
+    .copy-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f5f5f5;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #3E4956;
+    }
+
+    .copy-chip .material-icons { font-size: 14px; color: #79899D; cursor: pointer; }
+
+    .copy-bar-right {
+      margin-left: auto;
+      font-size: 12px;
+      color: #79899D;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .copy-bar-right .material-icons { font-size: 14px; }
+
+    /* ============================================================
+       STATS CARDS
+    ============================================================ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px 20px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+    }
+
+    .stat-card-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #79899D;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .stat-card-value {
+      font-size: 26px;
+      font-weight: 300;
+      color: #1D1D1D;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .stat-card-sub {
+      font-size: 11px;
+      color: #79899D;
+    }
+
+    /* Live Commerce stat card - gradient */
+    .stat-card-live {
+      background: linear-gradient(135deg, #ff56a1 0%, #d6006e 100%);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card-live::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 80px;
+      height: 80px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+
+    .stat-card-live .stat-card-label {
+      color: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-card-live .stat-card-label .material-icons {
+      font-size: 14px;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .stat-card-live .stat-card-value { color: #fff; font-weight: 400; }
+    .stat-card-live .stat-card-sub { color: rgba(255,255,255,0.75); }
+
+    /* ============================================================
+       LIVE COMMERCE CTA SECTION
+    ============================================================ */
+    .live-cta-wrapper {
+      margin-bottom: 20px;
+    }
+
+    .live-cta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #ff56a1, #d6006e);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 4px 4px 0 0;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .live-cta-badge .material-icons { font-size: 14px; }
+
+    .live-cta {
+      border: 2px dashed #ff56a1;
+      border-radius: 0 8px 8px 8px;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, rgba(255,86,161,0.03), rgba(255,86,161,0.01));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .live-cta-content { flex: 1; min-width: 280px; }
+
+    .live-cta-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #3E4956;
+      margin-bottom: 4px;
+    }
+
+    .live-cta-text {
+      font-size: 13px;
+      color: #79899D;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .live-cta-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-live-primary {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #ff56a1;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-live-primary:hover { background: #e0408a; }
+    .btn-live-primary .material-icons { font-size: 16px; }
+
+    .btn-live-outline {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      color: #3E4956;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-live-outline:hover { border-color: #ff56a1; color: #ff56a1; }
+    .btn-live-outline .material-icons { font-size: 16px; }
+
+    /* Proxima Live card */
+    .next-live-card {
+      background: linear-gradient(135deg, #d6006e, #a0004f);
+      border-radius: 10px;
+      padding: 16px 20px;
+      color: #fff;
+      min-width: 200px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .next-live-card .material-icons {
+      font-size: 32px;
+      opacity: 0.8;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .next-live-label {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .next-live-date {
+      font-size: 11px;
+      opacity: 0.8;
+      margin-bottom: 2px;
+    }
+
+    .next-live-name {
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0.9;
+      font-style: italic;
+    }
+
+    /* ============================================================
+       PRODUCTS SECTION
+    ============================================================ */
+    .products-section {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      overflow: hidden;
+    }
+
+    .products-header {
+      padding: 14px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #3E4956;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .product-row {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 12px;
+      transition: background 0.2s;
+    }
+
+    .product-row:last-child { border-bottom: none; }
+    .product-row:hover { background: #fafafa; }
+
+    .product-row-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #f5f5f5;
+      flex-shrink: 0;
+    }
+
+    .product-row-info { flex: 1; min-width: 0; }
+
+    .product-row-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #3E4956;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-row-price {
+      font-size: 12px;
+      font-weight: 700;
+      color: #ff56a1;
+    }
+
+    .product-row-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .share-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #fff;
+      transition: opacity 0.2s;
+    }
+
+    .share-circle:hover { opacity: 0.85; }
+    .share-circle.fb { background: #1877F2; }
+    .share-circle.wa { background: #25D366; }
+    .share-circle.tw { background: #333; }
+    .share-circle.cp { background: #bbb; }
+
+    .share-circle.live {
+      background: linear-gradient(135deg, #ff56a1, #d6006e);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      width: 36px;
+      border-radius: 14px;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1024px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .page { padding: 12px; }
+
+      .header { padding: 0 12px; }
+
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+      .stat-card { padding: 12px 14px; }
+      .stat-card-value { font-size: 20px; }
+
+      .live-cta {
+        flex-direction: column;
+        padding: 16px;
+      }
+
+      .live-cta-content { min-width: auto; }
+
+      .next-live-card {
+        width: 100%;
+        min-width: auto;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+        padding: 12px 16px;
+      }
+
+      .next-live-card .material-icons {
+        font-size: 28px;
+        margin-bottom: 0;
+      }
+
+      .copy-bar { padding: 10px 12px; gap: 8px; }
+
+      .copy-bar-right { margin-left: 0; width: 100%; }
+
+      .product-row { padding: 10px 12px; gap: 8px; }
+
+      .product-row-name { font-size: 12px; }
+
+      /* Hide some share buttons on mobile */
+      .share-circle.cp { display: none; }
+
+      .header-btn > span { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+
+      .stat-card-value { font-size: 18px; }
+      .stat-card { padding: 10px 12px; }
+
+      .live-cta-buttons { flex-direction: column; width: 100%; }
+      .btn-live-primary, .btn-live-outline { width: 100%; justify-content: center; }
+
+      .product-row-actions { gap: 4px; }
+      .share-circle { width: 26px; height: 26px; font-size: 11px; }
+      .share-circle.live { width: 32px; font-size: 8px; }
+      .share-circle.tw { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header class="header">
+  <div class="header-brand">OBOTICARIO</div>
+  <div class="header-right">
+    <button class="header-btn">
+      <span>Meu Espaco</span>
+      <i class="material-icons" style="font-size:16px;">expand_more</i>
+    </button>
+    <div class="header-notification-wrap">
+      <button class="header-btn" style="padding:6px 8px;">
+        <i class="material-icons">notifications</i>
+      </button>
+      <span class="notification-badge">10</span>
+    </div>
+    <div class="header-avatar">DAI</div>
+  </div>
+</header>
+
+<!-- ============================================================
+     PAGE
+============================================================ -->
+<div class="page">
+
+  <!-- Copy bar -->
+  <div class="copy-bar">
+    <span class="copy-bar-label">Copie e Compartilhe:</span>
+    <div class="copy-chip">
+      <i class="material-icons">link</i>
+      LOJADAICALMON
+      <i class="material-icons" title="Copiar" style="cursor:pointer;">content_copy</i>
+    </div>
+    <div class="copy-chip">
+      <i class="material-icons">qr_code</i>
+      SEU LINK
+      <i class="material-icons" title="Copiar link" style="cursor:pointer;">content_copy</i>
+    </div>
+    <div class="copy-bar-right">
+      Bonificacao atual <strong style="color:#3E4956;">8%</strong>
+      <i class="material-icons" style="color:#F2C037;">star</i>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <div class="stat-card-label">TOTAL DE VENDAS</div>
+      <div class="stat-card-value">R$ 118.892</div>
+      <div class="stat-card-sub">17.467 pedidos</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card-label">CREDITOS RECEBIDOS</div>
+      <div class="stat-card-value">R$ 9.878</div>
+      <div class="stat-card-sub">Disponivel para resgate</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card-label">CREDITOS RESGATADOS</div>
+      <div class="stat-card-value">R$ 9.820</div>
+      <div class="stat-card-sub">Ultimo: 15/02/2026</div>
+    </div>
+
+    <!-- NEW: Live Commerce card -->
+    <div class="stat-card stat-card-live">
+      <div class="stat-card-label">
+        <i class="material-icons">videocam</i>
+        LIVE COMMERCE
+      </div>
+      <div class="stat-card-value">R$ 3.240</div>
+      <div class="stat-card-sub">vendas via lives (4 lives)</div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       LIVE COMMERCE CTA SECTION (NEW)
+  ============================================================ -->
+  <div class="live-cta-wrapper">
+    <div class="live-cta-badge">
+      <i class="material-icons">auto_awesome</i>
+      NOVO &mdash; LIVE COMMERCE
+    </div>
+    <div class="live-cta">
+      <div class="live-cta-content">
+        <div class="live-cta-title">Venda ao vivo para seu publico!</div>
+        <div class="live-cta-text">
+          Faca uma live mostrando os produtos e ganhe comissao de cada venda em tempo real. Seus seguidores compram sem sair da live!
+        </div>
+        <div class="live-cta-buttons">
+          <button class="btn-live-primary">
+            <i class="material-icons">play_circle</i>
+            Iniciar Live Agora
+          </button>
+          <button class="btn-live-outline">
+            <i class="material-icons">calendar_today</i>
+            Agendar Live
+          </button>
+          <button class="btn-live-outline">
+            <i class="material-icons">video_library</i>
+            Minhas Lives
+          </button>
+        </div>
+      </div>
+      <div class="next-live-card">
+        <i class="material-icons">videocam</i>
+        <div>
+          <div class="next-live-label">Proxima Live</div>
+          <div class="next-live-date">Periodo: Dhs</div>
+          <div class="next-live-name">Kit Lily Blanche</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PRODUCTS SECTION
+  ============================================================ -->
+  <div class="products-section">
+    <div class="products-header">COMPARTILHE PRODUTOS</div>
+
+    <!-- Product 1 -->
+    <div class="product-row">
+      <img class="product-row-img"
+        src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/5d76ce8a-55e4-4667-bc41-71ddf09a148a-bot-2024071018.jpg"
+        alt="Combo L'eau de Lily"
+        onerror="this.style.background='#f0f0f0';"
+      />
+      <div class="product-row-info">
+        <div class="product-row-name">Combo L'eau de Lily: Desodorante Colonia 75ml + Creme 250g</div>
+        <div class="product-row-price">R$ 329,80</div>
+      </div>
+      <div class="product-row-actions">
+        <button class="share-circle fb" title="Facebook"><i class="fab fa-facebook-f" style="font-size:13px;"></i></button>
+        <button class="share-circle wa" title="WhatsApp"><i class="fab fa-whatsapp" style="font-size:14px;"></i></button>
+        <button class="share-circle tw" title="X"><i class="fab fa-x-twitter" style="font-size:12px;"></i></button>
+        <button class="share-circle cp" title="Copiar"><i class="material-icons" style="font-size:14px;">content_copy</i></button>
+        <button class="share-circle live" title="Compartilhar na Live">LIVE</button>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-row">
+      <img class="product-row-img"
+        src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2e945662-0a1f-4b71-bbce-d56c17bf6401-bot-2025030502.jpg"
+        alt="Combo Lily Blanche"
+        onerror="this.style.background='#f0f0f0';"
+      />
+      <div class="product-row-info">
+        <div class="product-row-name">Combo Lily Blanche: Desodorante Colonia 75ml + Creme 250g</div>
+        <div class="product-row-price">R$ 364,80</div>
+      </div>
+      <div class="product-row-actions">
+        <button class="share-circle fb" title="Facebook"><i class="fab fa-facebook-f" style="font-size:13px;"></i></button>
+        <button class="share-circle wa" title="WhatsApp"><i class="fab fa-whatsapp" style="font-size:14px;"></i></button>
+        <button class="share-circle tw" title="X"><i class="fab fa-x-twitter" style="font-size:12px;"></i></button>
+        <button class="share-circle cp" title="Copiar"><i class="material-icons" style="font-size:14px;">content_copy</i></button>
+        <button class="share-circle live" title="Compartilhar na Live">LIVE</button>
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-row">
+      <img class="product-row-img"
+        src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2f161d48-d3a6-4c49-9fbe-8eed0400d422-bot-57882-l-eau-de-lily-blanche-body-spray-01.jpg"
+        alt="Body Spray Lily Blanche"
+        onerror="this.style.background='#f0f0f0';"
+      />
+      <div class="product-row-info">
+        <div class="product-row-name">Body Spray Desodorante L'eau de Lily Blanche 100ml</div>
+        <div class="product-row-price">R$ 49,90</div>
+      </div>
+      <div class="product-row-actions">
+        <button class="share-circle fb" title="Facebook"><i class="fab fa-facebook-f" style="font-size:13px;"></i></button>
+        <button class="share-circle wa" title="WhatsApp"><i class="fab fa-whatsapp" style="font-size:14px;"></i></button>
+        <button class="share-circle tw" title="X"><i class="fab fa-x-twitter" style="font-size:12px;"></i></button>
+        <button class="share-circle cp" title="Copiar"><i class="material-icons" style="font-size:14px;">content_copy</i></button>
+        <button class="share-circle live" title="Compartilhar na Live">LIVE</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="height:24px;"></div>
+</div>
+
+</body>
+</html>
