@@ -1,0 +1,2409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flip - Live Commerce | LOJADAICALMON</title>
+
+  <!-- Google Fonts - Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Quasar CSS v1.22.10 -->
+  <link href="https://cdn.jsdelivr.net/npm/quasar@1.22.10/dist/quasar.min.css" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES - Flip Brand Variables
+    ============================================================ */
+    :root {
+      --flip-color-primary: #ff56a1;
+      --flip-color-dark-1: #2f3235;
+      --flip-border-radius: 24px;
+      --q-primary: #027be3;
+      --q-secondary: #26a69a;
+      --q-accent: #9c27b0;
+      --q-positive: #21ba45;
+      --q-negative: #c10015;
+      --q-info: #31ccec;
+      --q-warning: #f2c037;
+      --q-dark: #1d1d1d;
+      --text-cs-black: #3E4956;
+      --text-ds-grey: #79899D;
+      --sidebar-bg: #222222;
+      --sidebar-accent: #2F3235;
+      --sidebar-text: #8C8C8C;
+      --sidebar-active: #F7F7F7;
+      --card-shadow: #DCD6D6;
+      --divider-color: #E2E8F0;
+      --animate-duration: 0.3s;
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Roboto, -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #3E4956;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       CSS ANIMATIONS
+    ============================================================ */
+
+    /* Pulsing red dot for AO VIVO */
+    @keyframes pulse-red {
+      0%   { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+      70%  { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.5; }
+    }
+
+    /* Floating emoji reactions */
+    @keyframes float-up-1 {
+      0%   { transform: translateY(0) scale(1);   opacity: 1; }
+      100% { transform: translateY(-300px) scale(0.5); opacity: 0; }
+    }
+    @keyframes float-up-2 {
+      0%   { transform: translateY(0) translateX(10px) scale(1);   opacity: 1; }
+      100% { transform: translateY(-280px) translateX(-15px) scale(0.4); opacity: 0; }
+    }
+    @keyframes float-up-3 {
+      0%   { transform: translateY(0) translateX(-8px) scale(1);   opacity: 1; }
+      100% { transform: translateY(-320px) translateX(20px) scale(0.6); opacity: 0; }
+    }
+    @keyframes float-up-4 {
+      0%   { transform: translateY(0) translateX(5px) scale(1.1); opacity: 1; }
+      100% { transform: translateY(-260px) translateX(-10px) scale(0.3); opacity: 0; }
+    }
+
+    /* Confetti particles */
+    @keyframes confetti-fall {
+      0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+      100% { transform: translateY(200px) rotate(720deg); opacity: 0; }
+    }
+
+    /* Timer blink */
+    @keyframes timer-blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.6; }
+    }
+
+    /* Slide in from right for chat messages */
+    @keyframes slide-in {
+      from { transform: translateX(20px); opacity: 0; }
+      to   { transform: translateX(0);    opacity: 1; }
+    }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .q-header {
+      position: fixed;
+      top: 0;
+      left: 57px;
+      right: 0;
+      height: 61px;
+      background-color: #ffffff;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+    }
+
+    .q-toolbar {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 60px;
+      padding: 0 24px 0 12px;
+      gap: 8px;
+    }
+
+    .header-logo-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+
+    .header-logo-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #3E4956;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-logo-flip {
+      font-size: 18px;
+      font-weight: 900;
+      color: #ff56a1;
+      letter-spacing: -1px;
+    }
+
+    .header-logo-dot {
+      width: 6px;
+      height: 6px;
+      background: #ff56a1;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .header-brand-badge {
+      background: #3E4956;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: #3E4956;
+      transition: background 0.2s;
+    }
+
+    .header-btn:hover {
+      background: #f8fafc;
+    }
+
+    .header-btn .material-icons {
+      font-size: 20px;
+    }
+
+    .header-btn-outline {
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 4px;
+    }
+
+    .header-notification-wrap {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #027BE3;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 4px;
+      min-width: 16px;
+      height: 16px;
+      line-height: 14px;
+      text-align: center;
+      transform: translate(30%, -30%);
+    }
+
+    .header-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .header-separator {
+      width: 1px;
+      height: 32px;
+      background: rgba(0,0,0,0.12);
+      margin: 0 4px;
+    }
+
+    /* ============================================================
+       SIDEBAR
+    ============================================================ */
+    .q-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 57px;
+      height: 100vh;
+      background: #222222;
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 4px;
+      overflow: hidden;
+    }
+
+    .sidebar-profile {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 0;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ff56a1;
+    }
+
+    .q-item {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px;
+      color: #8C8C8C;
+      cursor: pointer;
+      transition: color 0.2s;
+      min-height: 44px;
+      text-decoration: none;
+    }
+
+    .q-item:hover .material-icons,
+    .q-item:hover .q-item__label {
+      color: #F7F7F7;
+    }
+
+    .q-item .material-icons {
+      font-size: 20px;
+      color: #8C8C8C;
+      transition: color 0.2s;
+    }
+
+    .q-item .q-item__label {
+      font-size: 9px;
+      text-align: center;
+      color: #8C8C8C;
+      line-height: 1.2;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+
+    /* Active menu item */
+    .menu-item-active {
+      color: #F7F7F7;
+    }
+
+    .menu-item-active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 4px;
+      bottom: 4px;
+      width: 3px;
+      background: #F7F7F7;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .menu-item-active .material-icons {
+      color: #F7F7F7;
+    }
+
+    .menu-item-active .q-item__label {
+      color: #F7F7F7;
+    }
+
+    /* NOVO badge */
+    .novo-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #dc2626;
+      color: #fff;
+      font-size: 7px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 3px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-spacer {
+      flex: 1;
+    }
+
+    /* ============================================================
+       PAGE CONTAINER
+    ============================================================ */
+    .q-page-container {
+      padding-top: 61px;
+      padding-left: 57px;
+      min-height: 100vh;
+    }
+
+    .q-page {
+      padding: 16px;
+      background: #f5f5f5;
+      min-height: calc(100vh - 61px);
+    }
+
+    /* ============================================================
+       BREADCRUMB
+    ============================================================ */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #79899D;
+      margin-bottom: 12px;
+    }
+
+    .breadcrumb a {
+      color: #79899D;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover {
+      color: #027BE3;
+    }
+
+    .breadcrumb .material-icons {
+      font-size: 14px;
+    }
+
+    .breadcrumb .active {
+      color: #3E4956;
+      font-weight: 500;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 500;
+      color: #3E4956;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .page-title .material-icons {
+      font-size: 24px;
+      color: #ff56a1;
+    }
+
+    /* ============================================================
+       LIVE TOOLBAR
+    ============================================================ */
+    .live-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 10px 16px;
+      margin-bottom: 12px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .live-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .live-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* AO VIVO badge */
+    .ao-vivo-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(220, 38, 38, 0.08);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      border-radius: 20px;
+      padding: 4px 12px 4px 8px;
+    }
+
+    .ao-vivo-dot {
+      width: 10px;
+      height: 10px;
+      background: #dc2626;
+      border-radius: 50%;
+      animation: pulse-red 1.5s infinite;
+      flex-shrink: 0;
+    }
+
+    .ao-vivo-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: #dc2626;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Viewer count */
+    .viewer-count {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #3E4956;
+    }
+
+    .viewer-count .material-icons {
+      font-size: 16px;
+      color: #79899D;
+    }
+
+    /* Platform badges */
+    .platform-badges {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .platform-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: #fff;
+    }
+
+    .platform-badge.youtube {
+      background: #FF0000;
+    }
+
+    .platform-badge.instagram {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    .platform-badge.tiktok {
+      background: #000000;
+    }
+
+    .platform-badge i,
+    .platform-badge .material-icons {
+      font-size: 12px;
+    }
+
+    /* Timer */
+    .live-timer {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #3E4956;
+      font-variant-numeric: tabular-nums;
+      animation: timer-blink 2s ease-in-out infinite;
+    }
+
+    .live-timer .material-icons {
+      font-size: 16px;
+      color: #79899D;
+    }
+
+    /* Toolbar controls */
+    .toolbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toolbar-btn {
+      background: transparent;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      color: #3E4956;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .toolbar-btn:hover {
+      background: #f8fafc;
+    }
+
+    .toolbar-btn .material-icons {
+      font-size: 16px;
+    }
+
+    .toolbar-btn-danger {
+      border-color: rgba(220, 38, 38, 0.3);
+      color: #dc2626;
+    }
+
+    .toolbar-btn-danger:hover {
+      background: rgba(220, 38, 38, 0.05);
+    }
+
+    /* ============================================================
+       TWO-COLUMN LAYOUT
+    ============================================================ */
+    .live-layout {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    /* ============================================================
+       VIDEO AREA (LEFT)
+    ============================================================ */
+    .video-area {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .video-container {
+      position: relative;
+      background: #111111;
+      border-radius: 8px;
+      min-height: 450px;
+      overflow: hidden;
+      background: linear-gradient(160deg, #1a0a1e 0%, #0d1a2e 40%, #0a0a12 100%);
+    }
+
+    /* Video background decorative elements */
+    .video-bg-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 70%, rgba(255, 86, 161, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 30%, rgba(2, 123, 227, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* Host text overlay */
+    .video-host-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 100%;
+      padding: 16px;
+      pointer-events: none;
+    }
+
+    .video-host-title {
+      font-size: 22px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.7);
+      margin-bottom: 8px;
+    }
+
+    .video-host-subtitle {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.6);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+    }
+
+    .video-placeholder-icon {
+      font-size: 64px;
+      color: rgba(255,255,255,0.15);
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    /* Live indicator on video */
+    .video-live-indicator {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      border-radius: 16px;
+      padding: 4px 10px;
+    }
+
+    .video-live-dot {
+      width: 8px;
+      height: 8px;
+      background: #dc2626;
+      border-radius: 50%;
+      animation: pulse-red 1.5s infinite;
+    }
+
+    .video-live-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    /* Viewer count on video */
+    .video-viewer-count {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      border-radius: 16px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: #fff;
+    }
+
+    .video-viewer-count .material-icons {
+      font-size: 14px;
+    }
+
+    /* QR Code overlay */
+    .video-qr-overlay {
+      position: absolute;
+      bottom: 80px;
+      left: 12px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 80px;
+    }
+
+    .qr-code-svg {
+      width: 60px;
+      height: 60px;
+    }
+
+    .qr-label {
+      font-size: 8px;
+      font-weight: 700;
+      color: #3E4956;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    /* Featured product overlay */
+    .video-product-overlay {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: linear-gradient(135deg, #ff56a1, #ff2d7a);
+      border-radius: 10px;
+      padding: 10px 12px;
+      width: 180px;
+      box-shadow: 0 4px 20px rgba(255, 86, 161, 0.4);
+    }
+
+    .product-overlay-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 4px;
+    }
+
+    .product-overlay-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .product-overlay-prices {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .product-overlay-price-original {
+      font-size: 10px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: line-through;
+    }
+
+    .product-overlay-price {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .product-overlay-image {
+      position: absolute;
+      right: 8px;
+      top: -20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .product-overlay-btn {
+      display: block;
+      width: 100%;
+      background: #fff;
+      color: #ff56a1;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    /* Floating emoji reactions */
+    .reactions-container {
+      position: absolute;
+      bottom: 60px;
+      right: 200px;
+      width: 40px;
+      pointer-events: none;
+    }
+
+    .reaction-emoji {
+      position: absolute;
+      font-size: 24px;
+      opacity: 0;
+    }
+
+    .reaction-emoji:nth-child(1) { animation: float-up-1 3s 0.2s infinite ease-out; }
+    .reaction-emoji:nth-child(2) { animation: float-up-2 3.5s 0.8s infinite ease-out; }
+    .reaction-emoji:nth-child(3) { animation: float-up-3 2.8s 1.4s infinite ease-out; }
+    .reaction-emoji:nth-child(4) { animation: float-up-4 3.2s 2s infinite ease-out; }
+    .reaction-emoji:nth-child(5) { animation: float-up-1 4s 0.5s infinite ease-out; }
+    .reaction-emoji:nth-child(6) { animation: float-up-3 3.8s 1.8s infinite ease-out; }
+
+    /* Confetti particles */
+    .confetti-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+      overflow: hidden;
+      height: 200px;
+    }
+
+    .confetti-particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      opacity: 0;
+    }
+
+    .confetti-particle:nth-child(1)  { left: 10%;  background: #ff56a1; animation: confetti-fall 3s 0.1s infinite; }
+    .confetti-particle:nth-child(2)  { left: 20%;  background: #027BE3; animation: confetti-fall 3.2s 0.5s infinite; border-radius: 50%; }
+    .confetti-particle:nth-child(3)  { left: 35%;  background: #F2C037; animation: confetti-fall 2.8s 1s infinite; }
+    .confetti-particle:nth-child(4)  { left: 50%;  background: #21BA45; animation: confetti-fall 3.5s 0.3s infinite; border-radius: 50%; }
+    .confetti-particle:nth-child(5)  { left: 65%;  background: #ff56a1; animation: confetti-fall 3s 0.8s infinite; }
+    .confetti-particle:nth-child(6)  { left: 75%;  background: #027BE3; animation: confetti-fall 2.6s 1.5s infinite; border-radius: 50%; }
+    .confetti-particle:nth-child(7)  { left: 85%;  background: #F2C037; animation: confetti-fall 3.3s 0.6s infinite; }
+    .confetti-particle:nth-child(8)  { left: 92%;  background: #dc2626; animation: confetti-fall 2.9s 1.2s infinite; border-radius: 50%; }
+
+    /* ============================================================
+       RIGHT PANEL (280px)
+    ============================================================ */
+    .right-panel {
+      width: 280px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Tabs */
+    .panel-tabs {
+      display: flex;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+    }
+
+    .panel-tab {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 10px 4px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      color: #79899D;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .panel-tab .material-icons {
+      font-size: 14px;
+    }
+
+    .panel-tab.active {
+      color: #ff56a1;
+      border-bottom-color: #ff56a1;
+    }
+
+    .panel-tab:hover:not(.active) {
+      color: #3E4956;
+      background: #f8fafc;
+    }
+
+    /* Products panel */
+    .products-panel {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      overflow: hidden;
+    }
+
+    .products-panel-header {
+      padding: 10px 12px 8px;
+      border-bottom: 1px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .products-panel-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #3E4956;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .products-panel-count {
+      font-size: 11px;
+      color: #79899D;
+    }
+
+    .product-card {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #E2E8F0;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .product-card:hover {
+      background: #fafafa;
+    }
+
+    .product-card:last-child {
+      border-bottom: none;
+    }
+
+    .product-card-pinned {
+      background: linear-gradient(90deg, rgba(255, 86, 161, 0.04), transparent);
+      border-left: 3px solid #ff56a1;
+    }
+
+    .product-card-pinned:hover {
+      background: linear-gradient(90deg, rgba(255, 86, 161, 0.08), rgba(255, 86, 161, 0.02));
+    }
+
+    .product-pin-label {
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      font-size: 9px;
+      font-weight: 700;
+      color: #ff56a1;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .product-pin-label .material-icons {
+      font-size: 10px;
+    }
+
+    .product-card-img {
+      width: 52px;
+      height: 52px;
+      border-radius: 6px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: #f5f5f5;
+    }
+
+    .product-card-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .product-card-name {
+      font-size: 11px;
+      font-weight: 500;
+      color: #3E4956;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+
+    .product-card-prices {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .product-card-original {
+      font-size: 10px;
+      color: #79899D;
+      text-decoration: line-through;
+    }
+
+    .product-card-price {
+      font-size: 13px;
+      font-weight: 700;
+      color: #3E4956;
+    }
+
+    .product-card-btn {
+      background: #ff56a1;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 8px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .product-card-btn:hover {
+      background: #e0408a;
+    }
+
+    /* Chat panel */
+    .chat-panel {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-pinned {
+      padding: 8px 12px;
+      background: #FFF8EC;
+      border-bottom: 1px solid #F2C037;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .chat-pinned-icon {
+      font-size: 14px;
+      color: #F2C037;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .chat-pinned-text {
+      font-size: 11px;
+      color: #3E4956;
+      line-height: 1.4;
+    }
+
+    .chat-messages {
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .chat-message {
+      animation: slide-in 0.3s ease-out;
+    }
+
+    .chat-message-header {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 2px;
+    }
+
+    .chat-message-user {
+      font-size: 11px;
+      font-weight: 700;
+      color: #027BE3;
+    }
+
+    .chat-message-user.host {
+      color: #ff56a1;
+    }
+
+    .chat-message-badge {
+      font-size: 9px;
+      background: #ff56a1;
+      color: #fff;
+      padding: 0 4px;
+      border-radius: 3px;
+      font-weight: 700;
+    }
+
+    .chat-message-text {
+      font-size: 12px;
+      color: #3E4956;
+      line-height: 1.4;
+    }
+
+    .chat-message-system {
+      font-size: 11px;
+      color: #21BA45;
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .chat-message-system .material-icons {
+      font-size: 13px;
+    }
+
+    .chat-input-area {
+      padding: 8px 12px;
+      border-top: 1px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chat-input {
+      flex: 1;
+      border: 1px solid #E2E8F0;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 12px;
+      color: #3E4956;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .chat-input:focus {
+      border-color: #ff56a1;
+    }
+
+    .chat-input::placeholder {
+      color: #79899D;
+    }
+
+    .chat-send-btn {
+      background: #ff56a1;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .chat-send-btn:hover {
+      background: #e0408a;
+    }
+
+    .chat-send-btn .material-icons {
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .chat-emoji-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      padding: 0;
+    }
+
+    /* ============================================================
+       STATS BAR (below video)
+    ============================================================ */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 14px 16px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-card-icon-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .stat-card-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-card-icon .material-icons {
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .stat-card-icon.pink   { background: rgba(255, 86, 161, 0.12); }
+    .stat-card-icon.pink   .material-icons { color: #ff56a1; }
+    .stat-card-icon.blue   { background: rgba(2, 123, 227, 0.12); }
+    .stat-card-icon.blue   .material-icons { color: #027BE3; }
+    .stat-card-icon.green  { background: rgba(33, 186, 69, 0.12); }
+    .stat-card-icon.green  .material-icons { color: #21BA45; }
+    .stat-card-icon.orange { background: rgba(242, 192, 55, 0.12); }
+    .stat-card-icon.orange .material-icons { color: #F2C037; }
+
+    .stat-card-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: #79899D;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-card-value {
+      font-size: 22px;
+      font-weight: 300;
+      color: #1D1D1D;
+      line-height: 1;
+    }
+
+    .stat-card-subinfo {
+      font-size: 11px;
+      color: #8EBCE4;
+    }
+
+    .stat-card-delta {
+      font-size: 11px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .stat-card-delta.up   { color: #21BA45; }
+    .stat-card-delta.down { color: #dc2626; }
+
+    .stat-card-delta .material-icons {
+      font-size: 12px;
+    }
+
+    /* ============================================================
+       VOUCHER SECTION
+    ============================================================ */
+    .section-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .voucher-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+    }
+
+    .section-card-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #79899D;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-card-title .material-icons {
+      font-size: 16px;
+    }
+
+    .coupon-display {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #fff5fa, #ffedf6);
+      border: 1px dashed #ff56a1;
+      border-radius: 8px;
+      padding: 10px 16px;
+      margin-bottom: 12px;
+    }
+
+    .coupon-code {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ff56a1;
+      letter-spacing: 1px;
+    }
+
+    .coupon-copy-btn {
+      background: #ff56a1;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .coupon-copy-btn .material-icons {
+      font-size: 14px;
+    }
+
+    .coupon-benefit {
+      font-size: 12px;
+      color: #79899D;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .share-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .share-label {
+      font-size: 11px;
+      color: #79899D;
+    }
+
+    .share-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #fff;
+      transition: opacity 0.2s;
+    }
+
+    .share-btn:hover { opacity: 0.85; }
+    .share-btn.facebook  { background: #1877F2; }
+    .share-btn.whatsapp  { background: #25D366; }
+    .share-btn.telegram  { background: #2AABEE; }
+    .share-btn.copy      { background: #79899D; }
+
+    /* Companion card */
+    .companion-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+    }
+
+    .companion-link-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #2A2A2A;
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+
+    .companion-link-text {
+      font-size: 11px;
+      color: #9E9E9E;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: monospace;
+    }
+
+    .companion-link-btn {
+      background: transparent;
+      border: 1px solid #555;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-family: inherit;
+      font-size: 11px;
+      color: #9E9E9E;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .companion-link-btn .material-icons {
+      font-size: 12px;
+    }
+
+    /* Multistreaming status */
+    .multistream-status {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      margin-top: 12px;
+    }
+
+    .multistream-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .multistream-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 8px;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+    }
+
+    .multistream-platform-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .multistream-platform-icon.yt { background: #FF0000; }
+    .multistream-platform-icon.ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+    .multistream-platform-icon.tt { background: #000000; }
+
+    .multistream-platform-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: #3E4956;
+    }
+
+    .multistream-status-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .multistream-status-badge.live {
+      background: rgba(33, 186, 69, 0.12);
+      color: #21BA45;
+    }
+
+    .multistream-status-badge.connecting {
+      background: rgba(242, 192, 55, 0.12);
+      color: #d4a00b;
+    }
+
+    .multistream-viewers {
+      font-size: 10px;
+      color: #79899D;
+    }
+
+    /* ============================================================
+       UTILITY CLASSES
+    ============================================================ */
+    .text-cs-black   { color: #3E4956; }
+    .text-ds-grey    { color: #79899D; }
+    .text-pink       { color: #ff56a1; }
+    .text-blue       { color: #027BE3; }
+    .text-green      { color: #21BA45; }
+    .default-card-border { box-shadow: #DCD6D6 0px 0px 2px 0px; }
+
+    .mt-12 { margin-top: 12px; }
+    .mb-12 { margin-bottom: 12px; }
+
+    /* Section header */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #3E4956;
+    }
+
+    .section-link {
+      font-size: 11px;
+      color: #027BE3;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .section-link .material-icons {
+      font-size: 13px;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #E2E8F0;
+      border-radius: 2px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #79899D;
+    }
+  </style>
+</head>
+<body class="desktop no-touch body--light theme-light-dark">
+
+<!-- ============================================================
+     SIDEBAR
+============================================================ -->
+<div class="q-drawer-container">
+  <aside class="q-drawer">
+
+    <!-- Profile Avatar -->
+    <div class="sidebar-profile">
+      <img
+        class="sidebar-avatar"
+        src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/boticario/190324/profile/photo/lfzev9HEzIbhM1Hs9D24xkTdAWEP9KmboIpjLyGr.jpg"
+        alt="DAI"
+        onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:36px;height:36px;border-radius:50%;background:#ff56a1;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;\'>D</div>';"
+      />
+    </div>
+
+    <!-- Menu Items -->
+    <a class="q-item" href="#" title="Homepage">
+      <i class="material-icons">home</i>
+      <span class="q-item__label">Home</span>
+    </a>
+
+    <a class="q-item" href="#" title="Minha loja">
+      <i class="material-icons">store</i>
+      <span class="q-item__label">Loja</span>
+    </a>
+
+    <a class="q-item" href="#" title="Meus favoritos">
+      <i class="material-icons">thumb_up</i>
+      <span class="q-item__label">Favoritos</span>
+    </a>
+
+    <!-- LIVES - Active item with NOVO badge -->
+    <a class="q-item menu-item-active" href="#" title="Lives">
+      <span class="novo-badge">NOVO</span>
+      <i class="material-icons">videocam</i>
+      <span class="q-item__label">Lives</span>
+    </a>
+
+    <a class="q-item" href="#" title="Minha carteira">
+      <i class="material-icons">wallet</i>
+      <span class="q-item__label">Carteira</span>
+    </a>
+
+    <a class="q-item" href="#" title="Meus dados">
+      <i class="material-icons">person</i>
+      <span class="q-item__label">Dados</span>
+    </a>
+
+    <a class="q-item" href="#" title="Como ganhar creditos">
+      <i class="material-icons">timeline</i>
+      <span class="q-item__label">Creditos</span>
+    </a>
+
+    <a class="q-item" href="#" title="Minhas vendas">
+      <i class="material-icons">shopping_cart</i>
+      <span class="q-item__label">Vendas</span>
+    </a>
+
+    <a class="q-item" href="#" title="Missoes">
+      <i class="material-icons">menu_book</i>
+      <span class="q-item__label">Missoes</span>
+    </a>
+
+    <a class="q-item" href="#" title="Cursos">
+      <i class="material-icons">collections_bookmark</i>
+      <span class="q-item__label">Cursos</span>
+    </a>
+
+    <a class="q-item" href="#" title="Area de conteudo">
+      <i class="material-icons">import_contacts</i>
+      <span class="q-item__label">Conteudo</span>
+    </a>
+
+    <a class="q-item" href="#" title="FAQ">
+      <i class="material-icons">help</i>
+      <span class="q-item__label">FAQ</span>
+    </a>
+
+    <div class="sidebar-spacer"></div>
+
+    <a class="q-item" href="#" title="Sair" style="margin-bottom: 8px;">
+      <i class="material-icons">logout</i>
+      <span class="q-item__label">Sair</span>
+    </a>
+
+  </aside>
+</div>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header class="q-header">
+  <div class="q-toolbar">
+
+    <!-- Left: Logo area -->
+    <div class="header-logo-area">
+      <button class="header-btn" style="padding: 4px 6px;">
+        <i class="material-icons" style="font-size:22px; color:#3E4956;">chevron_right</i>
+      </button>
+
+      <div class="header-logo-text">
+        <span class="header-logo-flip">flip</span>
+        <span class="header-logo-dot"></span>
+        <span class="header-brand-badge">O Boticario</span>
+      </div>
+
+      <!-- Breadcrumb in header -->
+      <div style="display:flex; align-items:center; gap:4px; margin-left:8px;">
+        <i class="material-icons" style="font-size:14px; color:#79899D;">chevron_right</i>
+        <a href="#" style="font-size:12px; color:#79899D; text-decoration:none;">Lives</a>
+        <i class="material-icons" style="font-size:14px; color:#79899D;">chevron_right</i>
+        <span style="font-size:12px; color:#3E4956; font-weight:500;">Ao Vivo</span>
+      </div>
+    </div>
+
+    <!-- Right: Actions -->
+    <div class="header-right">
+
+      <!-- Meu Espaco dropdown -->
+      <button class="header-btn header-btn-outline">
+        <i class="material-icons">shopping_bag</i>
+        <span>Meu Espaco</span>
+        <i class="material-icons" style="font-size:16px;">expand_more</i>
+      </button>
+
+      <!-- Notifications -->
+      <div class="header-notification-wrap">
+        <button class="header-btn" style="padding: 6px 8px;">
+          <i class="material-icons">notifications</i>
+        </button>
+        <span class="notification-badge">16</span>
+      </div>
+
+      <!-- Separator -->
+      <div class="header-separator"></div>
+
+      <!-- User avatar -->
+      <button class="header-btn">
+        <img
+          class="header-avatar"
+          src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/logo_foto/117455/1697049460_img.png"
+          alt="DAI"
+          onerror="this.outerHTML='<div style=\'width:24px;height:24px;border-radius:50%;background:#ff56a1;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px;\'>D</div>';"
+        />
+        <span>DAI</span>
+        <i class="material-icons" style="font-size:16px;">expand_more</i>
+      </button>
+
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     PAGE CONTAINER
+============================================================ -->
+<div class="q-page-container">
+  <div class="q-page">
+
+    <!-- Page Title + Breadcrumb -->
+    <div style="margin-bottom: 14px;">
+      <div class="breadcrumb">
+        <a href="#">Home</a>
+        <i class="material-icons">chevron_right</i>
+        <a href="#">Lives</a>
+        <i class="material-icons">chevron_right</i>
+        <span class="active">Ao Vivo</span>
+      </div>
+      <div class="page-title">
+        <i class="material-icons">videocam</i>
+        Live Commerce
+        <span style="font-size:13px; font-weight:400; color:#79899D;">— Daiene Calmon apresenta Kit Lily Blanche</span>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         LIVE TOOLBAR
+    ============================================================ -->
+    <div class="live-toolbar">
+      <div class="live-toolbar-left">
+
+        <!-- AO VIVO badge -->
+        <div class="ao-vivo-badge">
+          <div class="ao-vivo-dot"></div>
+          <span class="ao-vivo-text">Ao Vivo</span>
+        </div>
+
+        <!-- Viewer count -->
+        <div class="viewer-count">
+          <i class="material-icons">people</i>
+          <strong>342</strong>&nbsp;assistindo
+        </div>
+
+        <!-- Platform badges -->
+        <div class="platform-badges">
+          <div class="platform-badge youtube">
+            <i class="fab fa-youtube"></i> YouTube
+          </div>
+          <div class="platform-badge instagram">
+            <i class="fab fa-instagram"></i> Instagram
+          </div>
+          <div class="platform-badge tiktok">
+            <i class="fab fa-tiktok"></i> TikTok
+          </div>
+        </div>
+
+        <!-- Timer -->
+        <div class="live-timer">
+          <i class="material-icons">schedule</i>
+          00:23:45
+        </div>
+
+      </div>
+
+      <div class="live-toolbar-right">
+        <div class="toolbar-controls">
+          <button class="toolbar-btn">
+            <i class="material-icons">bar_chart</i> Estatisticas
+          </button>
+          <button class="toolbar-btn">
+            <i class="material-icons">share</i> Compartilhar
+          </button>
+          <button class="toolbar-btn toolbar-btn-danger">
+            <i class="material-icons">stop_circle</i> Encerrar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         TWO-COLUMN LAYOUT: VIDEO + RIGHT PANEL
+    ============================================================ -->
+    <div class="live-layout">
+
+      <!-- LEFT: Video Area -->
+      <div class="video-area">
+        <div class="video-container" style="min-height: 480px;">
+
+          <!-- Background glow -->
+          <div class="video-bg-glow"></div>
+
+          <!-- Confetti -->
+          <div class="confetti-container">
+            <div class="confetti-particle"></div>
+            <div class="confetti-particle"></div>
+            <div class="confetti-particle"></div>
+            <div class="confetti-particle"></div>
+            <div class="confetti-particle"></div>
+            <div class="confetti-particle"></div>
+            <div class="confetti-particle"></div>
+            <div class="confetti-particle"></div>
+          </div>
+
+          <!-- Live indicator (top-left) -->
+          <div class="video-live-indicator">
+            <div class="video-live-dot"></div>
+            <span class="video-live-text">AO VIVO</span>
+          </div>
+
+          <!-- Viewer count (top-right) -->
+          <div class="video-viewer-count">
+            <i class="material-icons">people</i>
+            342
+          </div>
+
+          <!-- Center host overlay -->
+          <div class="video-host-overlay">
+            <span class="video-placeholder-icon material-icons">videocam</span>
+            <div class="video-host-title">Daiene Calmon apresenta</div>
+            <div class="video-host-subtitle" style="font-size:18px; font-weight:500; color:rgba(255,255,255,0.85); margin-top:4px;">
+              Kit Lily Blanche
+            </div>
+            <div class="video-host-subtitle" style="margin-top:8px;">
+              <span style="background:rgba(255,86,161,0.2); border:1px solid rgba(255,86,161,0.4); padding:4px 12px; border-radius:20px; font-size:13px; color:#ff56a1;">
+                O Boticario - Colecao Exclusiva
+              </span>
+            </div>
+          </div>
+
+          <!-- Floating emoji reactions -->
+          <div class="reactions-container">
+            <span class="reaction-emoji">&#10084;&#65039;</span>
+            <span class="reaction-emoji">&#128514;</span>
+            <span class="reaction-emoji">&#128293;</span>
+            <span class="reaction-emoji">&#128079;</span>
+            <span class="reaction-emoji">&#10024;</span>
+            <span class="reaction-emoji">&#128525;</span>
+          </div>
+
+          <!-- QR Code overlay (bottom-left) -->
+          <div class="video-qr-overlay">
+            <svg class="qr-code-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+              <!-- QR code pattern simulation -->
+              <rect width="60" height="60" fill="#fff"/>
+              <!-- Position detection patterns -->
+              <rect x="2" y="2" width="18" height="18" rx="1" fill="#000"/>
+              <rect x="4" y="4" width="14" height="14" rx="1" fill="#fff"/>
+              <rect x="6" y="6" width="10" height="10" rx="1" fill="#000"/>
+              <rect x="40" y="2" width="18" height="18" rx="1" fill="#000"/>
+              <rect x="42" y="4" width="14" height="14" rx="1" fill="#fff"/>
+              <rect x="44" y="6" width="10" height="10" rx="1" fill="#000"/>
+              <rect x="2" y="40" width="18" height="18" rx="1" fill="#000"/>
+              <rect x="4" y="42" width="14" height="14" rx="1" fill="#fff"/>
+              <rect x="6" y="44" width="10" height="10" rx="1" fill="#000"/>
+              <!-- Data modules (simulated pattern) -->
+              <rect x="22" y="2" width="4" height="4" fill="#000"/>
+              <rect x="28" y="2" width="4" height="4" fill="#000"/>
+              <rect x="34" y="2" width="4" height="4" fill="#000"/>
+              <rect x="22" y="8" width="4" height="4" fill="#000"/>
+              <rect x="32" y="8" width="4" height="4" fill="#000"/>
+              <rect x="22" y="14" width="8" height="4" fill="#000"/>
+              <rect x="22" y="22" width="4" height="4" fill="#000"/>
+              <rect x="28" y="22" width="4" height="4" fill="#000"/>
+              <rect x="36" y="22" width="4" height="4" fill="#000"/>
+              <rect x="42" y="22" width="4" height="4" fill="#000"/>
+              <rect x="50" y="22" width="8" height="4" fill="#000"/>
+              <rect x="2" y="22" width="4" height="4" fill="#000"/>
+              <rect x="8" y="22" width="4" height="4" fill="#000"/>
+              <rect x="14" y="22" width="4" height="4" fill="#000"/>
+              <rect x="2" y="28" width="4" height="4" fill="#000"/>
+              <rect x="10" y="28" width="4" height="4" fill="#000"/>
+              <rect x="18" y="28" width="4" height="4" fill="#000"/>
+              <rect x="26" y="28" width="4" height="4" fill="#000"/>
+              <rect x="34" y="28" width="4" height="4" fill="#000"/>
+              <rect x="42" y="28" width="4" height="4" fill="#000"/>
+              <rect x="50" y="28" width="8" height="4" fill="#000"/>
+              <rect x="2" y="34" width="8" height="4" fill="#000"/>
+              <rect x="14" y="34" width="4" height="4" fill="#000"/>
+              <rect x="22" y="34" width="4" height="4" fill="#000"/>
+              <rect x="30" y="34" width="4" height="4" fill="#000"/>
+              <rect x="38" y="34" width="4" height="4" fill="#000"/>
+              <rect x="46" y="34" width="4" height="4" fill="#000"/>
+              <rect x="22" y="40" width="4" height="4" fill="#000"/>
+              <rect x="28" y="40" width="4" height="4" fill="#000"/>
+              <rect x="36" y="40" width="4" height="4" fill="#000"/>
+              <rect x="44" y="40" width="4" height="4" fill="#000"/>
+              <rect x="52" y="40" width="6" height="4" fill="#000"/>
+              <rect x="22" y="46" width="8" height="4" fill="#000"/>
+              <rect x="34" y="46" width="4" height="4" fill="#000"/>
+              <rect x="42" y="46" width="4" height="4" fill="#000"/>
+              <rect x="50" y="46" width="8" height="4" fill="#000"/>
+              <rect x="22" y="52" width="4" height="4" fill="#000"/>
+              <rect x="30" y="52" width="4" height="4" fill="#000"/>
+              <rect x="38" y="52" width="4" height="4" fill="#000"/>
+              <rect x="46" y="52" width="4" height="4" fill="#000"/>
+            </svg>
+            <span class="qr-label">Acesse a Live</span>
+          </div>
+
+          <!-- Featured product overlay (bottom-right) -->
+          <div class="video-product-overlay">
+            <img
+              class="product-overlay-image"
+              src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2e945662-0a1f-4b71-bbce-d56c17bf6401-bot-2025030502.jpg"
+              alt="Combo Lily Blanche"
+              onerror="this.style.display='none';"
+            />
+            <div class="product-overlay-label">Em destaque</div>
+            <div class="product-overlay-name">Combo Lily Blanche: Desod. + Creme</div>
+            <div class="product-overlay-prices">
+              <span class="product-overlay-price-original">R$ 364,80</span>
+              <span class="product-overlay-price">R$ 299,80</span>
+            </div>
+            <button class="product-overlay-btn">COMPRAR</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT: Products + Chat Panel -->
+      <div class="right-panel">
+
+        <!-- Tabs -->
+        <div class="panel-tabs">
+          <button class="panel-tab active">
+            <i class="material-icons">shopping_bag</i> Produtos
+          </button>
+          <button class="panel-tab">
+            <i class="material-icons">chat</i> Chat
+          </button>
+          <button class="panel-tab">
+            <i class="material-icons">bar_chart</i> Stats
+          </button>
+        </div>
+
+        <!-- Products Panel -->
+        <div class="products-panel">
+          <div class="products-panel-header">
+            <span class="products-panel-title">Produtos na Live</span>
+            <span class="products-panel-count">4 produtos</span>
+          </div>
+
+          <!-- Product 1 - Pinned -->
+          <div class="product-card product-card-pinned">
+            <span class="product-pin-label">
+              <i class="material-icons">push_pin</i> Destaque
+            </span>
+            <img
+              class="product-card-img"
+              src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2e945662-0a1f-4b71-bbce-d56c17bf6401-bot-2025030502.jpg"
+              alt="Combo Lily Blanche"
+              onerror="this.style.background='#f0f0f0';"
+            />
+            <div class="product-card-info">
+              <div class="product-card-name">Combo Lily Blanche: Desod. Colonia + Creme</div>
+              <div class="product-card-prices">
+                <span class="product-card-original">R$ 364,80</span>
+                <span class="product-card-price">R$ 299,80</span>
+              </div>
+            </div>
+            <button class="product-card-btn">COMPRAR</button>
+          </div>
+
+          <!-- Product 2 -->
+          <div class="product-card">
+            <img
+              class="product-card-img"
+              src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/5d76ce8a-55e4-4667-bc41-71ddf09a148a-bot-2024071018.jpg"
+              alt="Combo L'eau de Lily"
+              onerror="this.style.background='#f0f0f0';"
+            />
+            <div class="product-card-info">
+              <div class="product-card-name">Combo L'eau de Lily: Desod. + Creme</div>
+              <div class="product-card-prices">
+                <span class="product-card-original">R$ 364,80</span>
+                <span class="product-card-price">R$ 329,80</span>
+              </div>
+            </div>
+            <button class="product-card-btn">COMPRAR</button>
+          </div>
+
+          <!-- Product 3 -->
+          <div class="product-card">
+            <img
+              class="product-card-img"
+              src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/ae6187eb-2dbc-4580-b916-d22b2bc6cfcd-bot-86895-l-eau-de-lily-blanche-01.jpg"
+              alt="L'eau de Lily Blanche"
+              onerror="this.style.background='#f0f0f0';"
+            />
+            <div class="product-card-info">
+              <div class="product-card-name">L'eau de Lily Blanche Desod. Colonia 75ml</div>
+              <div class="product-card-prices">
+                <span class="product-card-price">R$ 219,90</span>
+              </div>
+            </div>
+            <button class="product-card-btn">COMPRAR</button>
+          </div>
+
+          <!-- Product 4 -->
+          <div class="product-card">
+            <img
+              class="product-card-img"
+              src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2f161d48-d3a6-4c49-9fbe-8eed0400d422-bot-57882-l-eau-de-lily-blanche-body-spray-01.jpg"
+              alt="Body Spray Lily Blanche"
+              onerror="this.style.background='#f0f0f0';"
+            />
+            <div class="product-card-info">
+              <div class="product-card-name">Body Spray Desod. L'eau de Lily Blanche 100ml</div>
+              <div class="product-card-prices">
+                <span class="product-card-price">R$ 49,90</span>
+              </div>
+            </div>
+            <button class="product-card-btn">COMPRAR</button>
+          </div>
+
+        </div>
+
+        <!-- Chat Panel -->
+        <div class="chat-panel">
+
+          <!-- Pinned welcome message -->
+          <div class="chat-pinned">
+            <span class="material-icons chat-pinned-icon">push_pin</span>
+            <div class="chat-pinned-text">
+              <strong>Bem-vindas a Live da Daiene!</strong><br>
+              Use o cupom <strong>LOJADAICALMON</strong> e ganhe frete gratis + mimo em compras acima de R$99.
+            </div>
+          </div>
+
+          <!-- Chat messages -->
+          <div class="chat-messages">
+
+            <div class="chat-message">
+              <div class="chat-message-header">
+                <span class="chat-message-user host">Daiene Calmon</span>
+                <span class="chat-message-badge">HOST</span>
+              </div>
+              <div class="chat-message-text">Oi gente! Hoje vou mostrar meus produtos favoritos da linha Lily Blanche! 🌸</div>
+            </div>
+
+            <div class="chat-message">
+              <div class="chat-message-header">
+                <span class="chat-message-user">Ana_Flor</span>
+              </div>
+              <div class="chat-message-text">Ameiiiii esse kit! Ja comprei o spray, cheiro incrivel</div>
+            </div>
+
+            <div class="chat-message">
+              <div class="chat-message-system">
+                <i class="material-icons">shopping_cart</i>
+                Marina_RS adicionou "Combo Lily Blanche" ao carrinho!
+              </div>
+            </div>
+
+            <div class="chat-message">
+              <div class="chat-message-header">
+                <span class="chat-message-user">Claudinha_RS</span>
+              </div>
+              <div class="chat-message-text">Qual a validade do cupom?</div>
+            </div>
+
+            <div class="chat-message">
+              <div class="chat-message-header">
+                <span class="chat-message-user host">Daiene Calmon</span>
+                <span class="chat-message-badge">HOST</span>
+              </div>
+              <div class="chat-message-text">O cupom LOJADAICALMON e valido ate domingo! Aproveita 💕</div>
+            </div>
+
+            <div class="chat-message">
+              <div class="chat-message-header">
+                <span class="chat-message-user">Patricia_SP</span>
+              </div>
+              <div class="chat-message-text">Que maravilha! Adoro a linha Lily</div>
+            </div>
+
+            <div class="chat-message">
+              <div class="chat-message-system">
+                <i class="material-icons">shopping_cart</i>
+                Bruna_BH adicionou "Body Spray Lily Blanche" ao carrinho!
+              </div>
+            </div>
+
+            <div class="chat-message">
+              <div class="chat-message-header">
+                <span class="chat-message-user">Kely_GO</span>
+              </div>
+              <div class="chat-message-text">Dai, o creme deixa a pele super hidratada mesmo?</div>
+            </div>
+
+          </div>
+
+          <!-- Chat input -->
+          <div class="chat-input-area">
+            <button class="chat-emoji-btn" title="Emoji">&#128512;</button>
+            <input class="chat-input" type="text" placeholder="Escreva uma mensagem..." />
+            <button class="chat-send-btn">
+              <i class="material-icons">send</i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- end right-panel -->
+    </div>
+    <!-- end live-layout -->
+
+    <!-- ============================================================
+         STATS BAR (4 metric cards)
+    ============================================================ -->
+    <div class="stats-bar">
+
+      <div class="stat-card">
+        <div class="stat-card-icon-row">
+          <span class="stat-card-label">Assistindo</span>
+          <div class="stat-card-icon pink">
+            <i class="material-icons">people</i>
+          </div>
+        </div>
+        <div class="stat-card-value">342</div>
+        <div class="stat-card-subinfo">pico: 401 espectadores</div>
+        <div class="stat-card-delta up">
+          <i class="material-icons">trending_up</i> +12% vs ultima live
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-icon-row">
+          <span class="stat-card-label">Vendas na Live</span>
+          <div class="stat-card-icon blue">
+            <i class="material-icons">shopping_cart</i>
+          </div>
+        </div>
+        <div class="stat-card-value">R$ 4.876,40</div>
+        <div class="stat-card-subinfo">23 pedidos confirmados</div>
+        <div class="stat-card-delta up">
+          <i class="material-icons">trending_up</i> +34% vs meta
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-icon-row">
+          <span class="stat-card-label">Interacoes</span>
+          <div class="stat-card-icon green">
+            <i class="material-icons">favorite</i>
+          </div>
+        </div>
+        <div class="stat-card-value">1.247</div>
+        <div class="stat-card-subinfo">reacoes + comentarios</div>
+        <div class="stat-card-delta up">
+          <i class="material-icons">trending_up</i> engajamento alto
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-icon-row">
+          <span class="stat-card-label">Conversao</span>
+          <div class="stat-card-icon orange">
+            <i class="material-icons">percent</i>
+          </div>
+        </div>
+        <div class="stat-card-value">6,7%</div>
+        <div class="stat-card-subinfo">cliques em produtos</div>
+        <div class="stat-card-delta up">
+          <i class="material-icons">trending_up</i> acima da media 4,2%
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================
+         VOUCHER + COMPANION SECTION (2-column)
+    ============================================================ -->
+    <div class="section-row">
+
+      <!-- Voucher Card -->
+      <div class="voucher-card">
+        <div class="section-card-title">
+          <i class="material-icons">local_offer</i>
+          Cupom de Desconto da Live
+        </div>
+
+        <div class="coupon-display">
+          <div>
+            <div style="font-size:11px; color:#79899D; margin-bottom:4px;">Seu cupom exclusivo</div>
+            <div class="coupon-code">LOJADAICALMON</div>
+          </div>
+          <button class="coupon-copy-btn">
+            <i class="material-icons">content_copy</i> Copiar
+          </button>
+        </div>
+
+        <div class="coupon-benefit">
+          <i class="material-icons" style="font-size:13px; vertical-align:middle; color:#21BA45;">check_circle</i>
+          Frete gratis + mimo nas compras acima de R$99,00
+        </div>
+
+        <div class="share-buttons">
+          <span class="share-label">Compartilhar:</span>
+          <button class="share-btn facebook" title="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </button>
+          <button class="share-btn whatsapp" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </button>
+          <button class="share-btn telegram" title="Telegram">
+            <i class="fab fa-telegram-plane"></i>
+          </button>
+          <button class="share-btn copy" title="Copiar link">
+            <i class="fas fa-copy"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Companion Page Card -->
+      <div class="companion-card">
+        <div class="section-card-title">
+          <i class="material-icons">open_in_new</i>
+          Pagina Companion
+        </div>
+
+        <p style="font-size:12px; color:#79899D; margin-bottom:12px; line-height:1.5;">
+          Pagina companion e exibida para quem assiste a live. Compartilhe o link para que mais pessoas possam acompanhar e comprar.
+        </p>
+
+        <div class="companion-link-box">
+          <span class="companion-link-text">https://go.flip.net.br/live/lojadaicalmon/lily-blanche-2024</span>
+          <button class="companion-link-btn">
+            <i class="material-icons">content_copy</i> Copiar
+          </button>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <button style="display:flex; align-items:center; gap:4px; background:#027BE3; color:#fff; border:none; border-radius:6px; padding:7px 14px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer;">
+            <i class="material-icons" style="font-size:15px;">open_in_new</i> Abrir Pagina
+          </button>
+          <button style="display:flex; align-items:center; gap:4px; background:transparent; color:#3E4956; border:1px solid #E2E8F0; border-radius:6px; padding:7px 14px; font-family:inherit; font-size:12px; font-weight:500; cursor:pointer;">
+            <i class="material-icons" style="font-size:15px;">qr_code</i> QR Code
+          </button>
+          <button style="display:flex; align-items:center; gap:4px; background:transparent; color:#3E4956; border:1px solid #E2E8F0; border-radius:6px; padding:7px 14px; font-family:inherit; font-size:12px; font-weight:500; cursor:pointer;">
+            <i class="material-icons" style="font-size:15px;">edit</i> Editar
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================
+         MULTISTREAMING STATUS
+    ============================================================ -->
+    <div class="multistream-status">
+
+      <div class="section-header">
+        <div class="section-title" style="display:flex; align-items:center; gap:6px;">
+          <i class="material-icons" style="font-size:18px; color:#ff56a1;">cast</i>
+          Status do Multistreaming
+        </div>
+        <a href="#" class="section-link">
+          Configurar <i class="material-icons">chevron_right</i>
+        </a>
+      </div>
+
+      <div class="multistream-grid">
+
+        <!-- YouTube -->
+        <div class="multistream-item">
+          <div class="multistream-platform-icon yt">
+            <i class="fab fa-youtube"></i>
+          </div>
+          <span class="multistream-platform-name">YouTube</span>
+          <span class="multistream-status-badge live">AO VIVO</span>
+          <span class="multistream-viewers">
+            <i class="material-icons" style="font-size:11px; vertical-align:middle;">people</i>
+            187 viewers
+          </span>
+        </div>
+
+        <!-- Instagram -->
+        <div class="multistream-item">
+          <div class="multistream-platform-icon ig">
+            <i class="fab fa-instagram"></i>
+          </div>
+          <span class="multistream-platform-name">Instagram</span>
+          <span class="multistream-status-badge live">AO VIVO</span>
+          <span class="multistream-viewers">
+            <i class="material-icons" style="font-size:11px; vertical-align:middle;">people</i>
+            98 viewers
+          </span>
+        </div>
+
+        <!-- TikTok -->
+        <div class="multistream-item">
+          <div class="multistream-platform-icon tt">
+            <i class="fab fa-tiktok"></i>
+          </div>
+          <span class="multistream-platform-name">TikTok</span>
+          <span class="multistream-status-badge live">AO VIVO</span>
+          <span class="multistream-viewers">
+            <i class="material-icons" style="font-size:11px; vertical-align:middle;">people</i>
+            57 viewers
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Bonification info -->
+      <div style="margin-top:14px; padding-top:14px; border-top:1px solid #E2E8F0; display:flex; align-items:center; justify-content:space-between;">
+        <div style="font-size:12px; color:#79899D; display:flex; align-items:center; gap:6px;">
+          <i class="material-icons" style="font-size:16px; color:#F2C037;">star</i>
+          Bonificacao atual: <strong style="color:#3E4956;">8%</strong> sobre vendas da live
+        </div>
+        <div style="font-size:12px; color:#79899D; display:flex; align-items:center; gap:4px;">
+          <i class="material-icons" style="font-size:14px;">schedule</i>
+          Duracao: <strong style="color:#3E4956;">00:23:45</strong>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom padding -->
+    <div style="height: 24px;"></div>
+
+  </div>
+</div>
+
+<!-- Scripts (optional - for interactivity hints) -->
+<script>
+  // Tab switching
+  document.querySelectorAll('.panel-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.panel-tab').forEach(function(t) {
+        t.classList.remove('active');
+      });
+      tab.classList.add('active');
+    });
+  });
+
+  // Copy coupon button feedback
+  document.querySelectorAll('.coupon-copy-btn, .companion-link-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var original = btn.innerHTML;
+      btn.innerHTML = '<i class="material-icons" style="font-size:14px;">check</i> Copiado!';
+      btn.style.background = '#21BA45';
+      setTimeout(function() {
+        btn.innerHTML = original;
+        btn.style.background = '';
+      }, 2000);
+    });
+  });
+
+  // Animate timer
+  var timerEl = document.querySelector('.live-timer');
+  var seconds = 23 * 60 + 45;
+  setInterval(function() {
+    seconds++;
+    var h = Math.floor(seconds / 3600);
+    var m = Math.floor((seconds % 3600) / 60);
+    var s = seconds % 60;
+    timerEl.innerHTML =
+      '<i class="material-icons">schedule</i> ' +
+      String(h).padStart(2,'0') + ':' +
+      String(m).padStart(2,'0') + ':' +
+      String(s).padStart(2,'0');
+  }, 1000);
+
+  // Simulate viewer count changing
+  var viewerEl = document.querySelector('.viewer-count strong');
+  var videoViewerEl = document.querySelector('.video-viewer-count');
+  var baseCount = 342;
+  setInterval(function() {
+    var delta = Math.floor(Math.random() * 7) - 3;
+    baseCount = Math.max(300, Math.min(420, baseCount + delta));
+    viewerEl.textContent = baseCount;
+    videoViewerEl.innerHTML = '<i class="material-icons">people</i> ' + baseCount;
+  }, 3000);
+</script>
+
+</body>
+</html>
