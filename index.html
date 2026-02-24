@@ -629,6 +629,32 @@
       pointer-events: none;
     }
 
+    /* Host video image */
+    .video-host-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+      z-index: 0;
+    }
+
+    /* Gradient overlay on top of host image for readability */
+    .video-image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0,0,0,0.3) 0%,
+        rgba(0,0,0,0.05) 30%,
+        rgba(0,0,0,0.05) 60%,
+        rgba(0,0,0,0.6) 100%
+      );
+      z-index: 1;
+      pointer-events: none;
+    }
+
     /* Host text overlay */
     .video-host-overlay {
       position: absolute;
@@ -639,6 +665,7 @@
       width: 100%;
       padding: 16px;
       pointer-events: none;
+      z-index: 2;
     }
 
     .video-host-title {
@@ -676,6 +703,7 @@
       backdrop-filter: blur(4px);
       border-radius: 16px;
       padding: 4px 10px;
+      z-index: 3;
     }
 
     .video-live-dot {
@@ -707,6 +735,7 @@
       padding: 4px 10px;
       font-size: 12px;
       color: #fff;
+      z-index: 3;
     }
 
     .video-viewer-count .material-icons {
@@ -726,6 +755,7 @@
       align-items: center;
       gap: 4px;
       width: 80px;
+      z-index: 3;
     }
 
     .qr-code-svg {
@@ -752,6 +782,7 @@
       padding: 10px 12px;
       width: 180px;
       box-shadow: 0 4px 20px rgba(255, 86, 161, 0.4);
+      z-index: 3;
     }
 
     .product-overlay-label {
@@ -825,6 +856,7 @@
       right: 200px;
       width: 40px;
       pointer-events: none;
+      z-index: 3;
     }
 
     .reaction-emoji {
@@ -1683,16 +1715,34 @@
 
       /* Hide desktop sidebar toggle on mobile */
       .header-logo-area > .header-btn {
-        display: none;
+        display: none !important;
       }
 
-      /* Hide breadcrumb in header on mobile */
-      .header-logo-area > div:last-child {
-        display: none;
+      /* Hide breadcrumb in header on mobile (override inline display:flex) */
+      .header-logo-area > div[style] {
+        display: none !important;
       }
 
       .header-brand-badge {
+        display: none !important;
+      }
+
+      /* Compact header on mobile */
+      .q-toolbar {
+        padding: 0 8px;
+        gap: 4px;
+      }
+
+      .header-right {
+        gap: 2px;
+      }
+
+      .header-separator {
         display: none;
+      }
+
+      .header-btn {
+        padding: 4px 6px;
       }
 
       /* Page container: no sidebar offset */
@@ -1752,7 +1802,8 @@
       }
 
       .video-container {
-        min-height: 280px !important;
+        min-height: 0 !important;
+        aspect-ratio: 16 / 9;
       }
 
       /* Video overlays */
@@ -1874,9 +1925,10 @@
         font-size: 11px;
       }
 
-      /* Video even shorter */
+      /* Video aspect ratio on small mobile */
       .video-container {
-        min-height: 220px !important;
+        min-height: 0 !important;
+        aspect-ratio: 16 / 9;
       }
 
       .video-host-title {
@@ -2213,8 +2265,17 @@
       <div class="video-area">
         <div class="video-container" style="min-height: 480px;">
 
+          <!-- Host video image (simulated live video frame) -->
+          <img
+            class="video-host-image"
+            src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=900&h=600&fit=crop&crop=center"
+            alt="Host apresentando produtos de beleza"
+            onerror="this.style.display='none';"
+          />
+          <div class="video-image-overlay"></div>
+
           <!-- Background glow -->
-          <div class="video-bg-glow"></div>
+          <div class="video-bg-glow" style="z-index:2;"></div>
 
           <!-- Confetti -->
           <div class="confetti-container">
