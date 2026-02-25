@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flip Live Commerce — Hub de Navegação</title>
+
+    <!-- Google Fonts - Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* ── Reset & Base ─────────────────────────────────── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --flip-pink: #ff56a1;
+            --flip-pink-dark: #d6006e;
+            --flip-pink-gradient: linear-gradient(135deg, #ff56a1, #d6006e);
+            --text-primary: #3E4956;
+            --text-secondary: #79899D;
+            --text-dark: #1D1D1D;
+            --bg-page: #f5f5f5;
+            --bg-card: #FFFFFF;
+            --border-color: #E2E8F0;
+            --shadow-card: #DCD6D6 0px 0px 2px 0px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: Roboto, -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── Hero Section ─────────────────────────────────── */
+        .hero {
+            background: linear-gradient(135deg, #ff56a1 0%, #d6006e 60%, #a80058 100%);
+            padding: 80px 24px 64px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -30%;
+            width: 160%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to top, var(--bg-page), transparent);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: heroFadeIn 0.8s ease-out;
+        }
+
+        @keyframes heroFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .hero-logo-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+
+        .hero-logo-icon .material-icons {
+            font-size: 32px;
+            color: #fff;
+        }
+
+        .hero-title {
+            font-size: 52px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            font-weight: 300;
+            color: rgba(255,255,255,0.92);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-subtitle-2 {
+            font-size: 15px;
+            font-weight: 400;
+            color: rgba(255,255,255,0.65);
+            letter-spacing: 0.3px;
+        }
+
+        .hero-divider {
+            width: 60px;
+            height: 3px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 2px;
+            margin: 24px auto 16px;
+        }
+
+        /* ── Cards Section ────────────────────────────────── */
+        .section-cards {
+            max-width: 1120px;
+            margin: -24px auto 0;
+            padding: 0 24px 48px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .nav-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 32px 28px 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 0 2px rgba(0,0,0,0.04);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                        box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            opacity: 0;
+            animation: cardFadeIn 0.6s ease-out forwards;
+        }
+
+        .nav-card:nth-child(1) { animation-delay: 0.1s; }
+        .nav-card:nth-child(2) { animation-delay: 0.2s; }
+        .nav-card:nth-child(3) { animation-delay: 0.3s; }
+        .nav-card:nth-child(4) { animation-delay: 0.4s; }
+        .nav-card:nth-child(5) { animation-delay: 0.5s; }
+        .nav-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(255, 86, 161, 0.15), 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .nav-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--flip-pink-gradient);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-icon-wrap {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(255,86,161,0.1), rgba(214,0,110,0.08));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .nav-card:hover .card-icon-wrap {
+            background: var(--flip-pink-gradient);
+        }
+
+        .card-icon-wrap .material-icons {
+            font-size: 28px;
+            color: var(--flip-pink);
+            transition: color 0.3s ease;
+        }
+
+        .nav-card:hover .card-icon-wrap .material-icons {
+            color: #fff;
+        }
+
+        .card-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, rgba(255,86,161,0.1), rgba(214,0,110,0.06));
+            color: var(--flip-pink-dark);
+            white-space: nowrap;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .card-description {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .card-arrow {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--flip-pink);
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .card-arrow .material-icons {
+            font-size: 18px;
+        }
+
+        .nav-card:hover .card-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ── Journey Section ──────────────────────────────── */
+        .section-journey {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 24px 24px 64px;
+        }
+
+        .journey-title {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .journey-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            flex-wrap: wrap;
+            padding: 0 16px;
+        }
+
+        .journey-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .journey-step:hover {
+            transform: translateY(-4px);
+        }
+
+        .journey-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .journey-step:hover .journey-circle {
+            border-color: var(--flip-pink);
+            background: var(--flip-pink-gradient);
+            box-shadow: 0 4px 16px rgba(255, 86, 161, 0.3);
+        }
+
+        .journey-circle .material-icons {
+            font-size: 22px;
+            color: var(--flip-pink);
+            transition: color 0.3s ease;
+        }
+
+        .journey-step:hover .journey-circle .material-icons {
+            color: #fff;
+        }
+
+        .journey-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            text-align: center;
+            white-space: nowrap;
+            transition: color 0.2s ease;
+        }
+
+        .journey-step:hover .journey-label {
+            color: var(--flip-pink);
+        }
+
+        .journey-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            margin-bottom: 20px;
+        }
+
+        .journey-arrow::before {
+            content: '';
+            display: block;
+            width: 32px;
+            height: 2px;
+            background: var(--border-color);
+            position: relative;
+        }
+
+        .journey-arrow::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 6px solid var(--border-color);
+            margin-left: -2px;
+        }
+
+        /* ── Footer ───────────────────────────────────────── */
+        .hub-footer {
+            background: #1D1D1D;
+            padding: 48px 24px 40px;
+            text-align: center;
+        }
+
+        .footer-brand {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .footer-brand em {
+            font-style: normal;
+            background: var(--flip-pink-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-line {
+            font-size: 13px;
+            color: rgba(255,255,255,0.45);
+            margin-bottom: 4px;
+            font-weight: 400;
+        }
+
+        .footer-divider {
+            width: 40px;
+            height: 2px;
+            background: var(--flip-pink);
+            margin: 20px auto;
+            border-radius: 1px;
+        }
+
+        .footer-powered {
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        /* ── Responsive ───────────────────────────────────── */
+        @media (max-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-title {
+                font-size: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 16px 48px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-subtitle {
+                font-size: 17px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .section-cards {
+                padding: 0 16px 32px;
+            }
+
+            .journey-flow {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .journey-arrow {
+                transform: rotate(90deg);
+                width: 32px;
+                height: 32px;
+                margin-bottom: 0;
+            }
+
+            .nav-card {
+                padding: 24px 20px 20px;
+            }
+
+            .card-arrow {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 28px;
+            }
+
+            .hero-subtitle {
+                font-size: 15px;
+            }
+
+            .hero-subtitle-2 {
+                font-size: 13px;
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-logo">
+                <div class="hero-logo-icon">
+                    <i class="material-icons">live_tv</i>
+                </div>
+            </div>
+            <h1 class="hero-title">Flip Live Commerce</h1>
+            <p class="hero-subtitle">Proposta de Integração — Plataforma de Live Shopping</p>
+            <div class="hero-divider"></div>
+            <p class="hero-subtitle-2">Mockups de todas as telas do sistema</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ CARDS GRID ═══════════════ -->
+    <section class="section-cards">
+        <div class="cards-grid">
+
+            <!-- Card 1: Dashboard -->
+            <a href="dashboard.html" class="nav-card">
+                <div class="card-header">
+                    <div class="card-icon-wrap">
+                        <i class="material-icons">dashboard</i>
+                    </div>
+                    <span class="card-badge">Existente + Live</span>
+                </div>
+                <h3 class="card-title">Dashboard</h3>
+                <p class="card-description">Painel principal do parceiro com integração Live Commerce</p>
+                <span class="card-arrow">
+                    Acessar <i class="material-icons">arrow_forward</i>
+                </span>
+            </a>
+
+            <!-- Card 2: Live do Público -->
+            <a href="index.html" class="nav-card">
+                <div class="card-header">
+                    <div class="card-icon-wrap">
+                        <i class="material-icons">live_tv</i>
+                    </div>
+                    <span class="card-badge">Viewer</span>
+                </div>
+                <h3 class="card-title">Live — Visão do Público</h3>
+                <p class="card-description">Como o cliente vê a live: vídeo, produtos, chat, compra</p>
+                <span class="card-arrow">
+                    Acessar <i class="material-icons">arrow_forward</i>
+                </span>
+            </a>
+
+            <!-- Card 3: Minhas Lives -->
+            <a href="minhas-lives.html" class="nav-card">
+                <div class="card-header">
+                    <div class="card-icon-wrap">
+                        <i class="material-icons">video_library</i>
+                    </div>
+                    <span class="card-badge">Gestão</span>
+                </div>
+                <h3 class="card-title">Minhas Lives</h3>
+                <p class="card-description">Gestão de todas as lives: agendadas, ao vivo, encerradas</p>
+                <span class="card-arrow">
+                    Acessar <i class="material-icons">arrow_forward</i>
+                </span>
+            </a>
+
+            <!-- Card 4: Criar Live -->
+            <a href="criar-live.html" class="nav-card">
+                <div class="card-header">
+                    <div class="card-icon-wrap">
+                        <i class="material-icons">add_circle</i>
+                    </div>
+                    <span class="card-badge">Wizard 4 Steps</span>
+                </div>
+                <h3 class="card-title">Criar / Agendar Live</h3>
+                <p class="card-description">Wizard: info → produtos → promoção → revisão</p>
+                <span class="card-arrow">
+                    Acessar <i class="material-icons">arrow_forward</i>
+                </span>
+            </a>
+
+            <!-- Card 5: Sala da Live -->
+            <a href="sala-live.html" class="nav-card">
+                <div class="card-header">
+                    <div class="card-icon-wrap">
+                        <i class="material-icons">videocam</i>
+                    </div>
+                    <span class="card-badge">Control Room</span>
+                </div>
+                <h3 class="card-title">Sala de Controle</h3>
+                <p class="card-description">Painel durante a live: vídeo, chat, stats, QR code</p>
+                <span class="card-arrow">
+                    Acessar <i class="material-icons">arrow_forward</i>
+                </span>
+            </a>
+
+            <!-- Card 6: Compartilhar -->
+            <a href="compartilhar-live.html" class="nav-card">
+                <div class="card-header">
+                    <div class="card-icon-wrap">
+                        <i class="material-icons">share</i>
+                    </div>
+                    <span class="card-badge">Promoção</span>
+                </div>
+                <h3 class="card-title">Compartilhar Live</h3>
+                <p class="card-description">QR code, links, cupom, redes sociais, embed</p>
+                <span class="card-arrow">
+                    Acessar <i class="material-icons">arrow_forward</i>
+                </span>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- ═══════════════ USER JOURNEY ═══════════════ -->
+    <section class="section-journey">
+        <h4 class="journey-title">Jornada do Usuário</h4>
+        <div class="journey-flow">
+
+            <a href="dashboard.html" class="journey-step">
+                <div class="journey-circle">
+                    <i class="material-icons">dashboard</i>
+                </div>
+                <span class="journey-label">Dashboard</span>
+            </a>
+
+            <div class="journey-arrow"></div>
+
+            <a href="criar-live.html" class="journey-step">
+                <div class="journey-circle">
+                    <i class="material-icons">add_circle</i>
+                </div>
+                <span class="journey-label">Criar Live</span>
+            </a>
+
+            <div class="journey-arrow"></div>
+
+            <a href="criar-live.html" class="journey-step">
+                <div class="journey-circle">
+                    <i class="material-icons">inventory_2</i>
+                </div>
+                <span class="journey-label">Produtos</span>
+            </a>
+
+            <div class="journey-arrow"></div>
+
+            <a href="criar-live.html" class="journey-step">
+                <div class="journey-circle">
+                    <i class="material-icons">local_offer</i>
+                </div>
+                <span class="journey-label">Promoção</span>
+            </a>
+
+            <div class="journey-arrow"></div>
+
+            <a href="sala-live.html" class="journey-step">
+                <div class="journey-circle">
+                    <i class="material-icons">play_circle</i>
+                </div>
+                <span class="journey-label">Iniciar Live</span>
+            </a>
+
+            <div class="journey-arrow"></div>
+
+            <a href="sala-live.html" class="journey-step">
+                <div class="journey-circle">
+                    <i class="material-icons">videocam</i>
+                </div>
+                <span class="journey-label">Sala de Controle</span>
+            </a>
+
+            <div class="journey-arrow"></div>
+
+            <a href="compartilhar-live.html" class="journey-step">
+                <div class="journey-circle">
+                    <i class="material-icons">share</i>
+                </div>
+                <span class="journey-label">Compartilhar</span>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer class="hub-footer">
+        <div class="footer-brand">Flip <em>Live Commerce</em></div>
+        <p class="footer-line">Proposta Estratégica 2026</p>
+        <p class="footer-line">Desenvolvido para apresentação ao CEO</p>
+        <div class="footer-divider"></div>
+        <p class="footer-powered">Powered by Flip.net</p>
+    </footer>
+
+</body>
+</html>

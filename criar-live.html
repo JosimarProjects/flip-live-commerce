@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flip - Criar Live | LOJADAICALMON</title>
+
+  <!-- Google Fonts - Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Roboto, -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #f5f5f5;
+      color: #3E4956;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ============================================================
+       SIDEBAR
+    ============================================================ */
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 57px;
+      background: #222222;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .sidebar:hover { width: 220px; }
+
+    .sidebar-avatar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      min-height: 57px;
+    }
+
+    .sidebar-avatar-circle {
+      width: 30px; height: 30px; min-width: 30px;
+      border-radius: 50%;
+      background: #ff56a1;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 11px;
+    }
+
+    .sidebar-avatar-name {
+      font-size: 13px; font-weight: 500; color: #F7F7F7;
+      white-space: nowrap; opacity: 0; transition: opacity 0.2s;
+    }
+
+    .sidebar:hover .sidebar-avatar-name { opacity: 1; }
+
+    .sidebar-nav {
+      flex: 1; display: flex; flex-direction: column;
+      padding: 6px 0; overflow-y: auto; overflow-x: hidden;
+    }
+
+    .sidebar-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 16px; color: #8C8C8C; cursor: pointer;
+      transition: all 0.2s; white-space: nowrap;
+      position: relative; min-height: 42px; text-decoration: none;
+    }
+
+    .sidebar-item:hover { color: #F7F7F7; background: #2F3235; }
+    .sidebar-item.active { color: #F7F7F7; background: #2F3235; }
+
+    .sidebar-item.active::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; background: #F7F7F7; border-radius: 0 2px 2px 0;
+    }
+
+    .sidebar-item .material-icons { font-size: 22px; min-width: 22px; text-align: center; }
+
+    .sidebar-item-label {
+      font-size: 13px; font-weight: 400; opacity: 0; transition: opacity 0.2s;
+    }
+
+    .sidebar:hover .sidebar-item-label { opacity: 1; }
+
+    .sidebar-divider {
+      height: 1px; background: rgba(255,255,255,0.1); margin: 6px 12px;
+    }
+
+    .sidebar-badge-novo {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #ff56a1; color: #fff; font-size: 8px; font-weight: 700;
+      padding: 2px 5px; border-radius: 3px; letter-spacing: 0.5px;
+      text-transform: uppercase; line-height: 1; opacity: 0;
+      transition: opacity 0.2s; margin-left: auto;
+    }
+
+    .sidebar:hover .sidebar-badge-novo { opacity: 1; }
+
+    .sidebar-bottom {
+      padding: 6px 0; border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .header {
+      position: fixed; top: 0; left: 57px; right: 0;
+      height: 61px; background: #fff;
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; z-index: 100;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 24px; }
+
+    .header-brand {
+      font-size: 16px; font-weight: 900; color: #3E4956;
+      letter-spacing: -0.5px; text-transform: uppercase;
+    }
+
+    .header-breadcrumb { font-size: 12px; color: #79899D; }
+    .header-breadcrumb a { color: #79899D; text-decoration: none; transition: color 0.2s; }
+    .header-breadcrumb a:hover { color: #ff56a1; }
+    .header-breadcrumb span { color: #3E4956; font-weight: 500; }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    .header-btn {
+      background: transparent; border: none; cursor: pointer;
+      display: flex; align-items: center; gap: 4px;
+      padding: 6px 10px; border-radius: 6px;
+      font-family: inherit; font-size: 13px; font-weight: 500; color: #3E4956;
+    }
+
+    .header-btn:hover { background: #f8fafc; }
+    .header-btn .material-icons { font-size: 20px; }
+
+    .header-notification-wrap { position: relative; display: inline-flex; }
+
+    .notification-badge {
+      position: absolute; top: 0; right: 0;
+      background: #027BE3; color: #fff; font-size: 10px; font-weight: 700;
+      padding: 1px 5px; border-radius: 4px; min-width: 16px; height: 16px;
+      line-height: 14px; text-align: center; transform: translate(30%, -30%);
+    }
+
+    .header-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #ff56a1; color: #fff; display: flex;
+      align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px;
+    }
+
+    .header-hamburger {
+      display: none; background: none; border: none;
+      cursor: pointer; color: #3E4956; padding: 4px;
+    }
+
+    .header-hamburger .material-icons { font-size: 24px; }
+
+    /* ============================================================
+       MAIN CONTENT
+    ============================================================ */
+    .main-content {
+      padding-top: 61px; padding-left: 57px; min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1100px; margin: 0 auto; padding: 24px 28px;
+    }
+
+    /* ============================================================
+       PAGE TITLE
+    ============================================================ */
+    .page-title-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .page-title {
+      font-size: 22px; font-weight: 700; color: #1D1D1D;
+    }
+
+    .page-title-sub {
+      font-size: 13px; color: #79899D; margin-top: 2px;
+    }
+
+    /* ============================================================
+       WIZARD - CSS-ONLY STEP SWITCHING
+    ============================================================ */
+
+    /* Hidden radio inputs that control step visibility */
+    .wizard-radio { display: none; }
+
+    /* STEPPER PROGRESS BAR */
+    .wizard-stepper {
+      display: flex; justify-content: center; align-items: center;
+      padding: 20px 16px; margin-bottom: 24px;
+      background: #fff; border-radius: 8px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+    }
+
+    .wizard-step-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 20px; cursor: pointer;
+    }
+
+    .wizard-step-circle {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; flex-shrink: 0;
+      background: #f0f0f0; color: #79899D;
+      transition: all 0.2s;
+    }
+
+    .wizard-step-circle .material-icons { font-size: 18px; }
+
+    .wizard-step-label {
+      font-size: 13px; font-weight: 500; color: #79899D;
+      transition: all 0.2s; white-space: nowrap;
+    }
+
+    .wizard-connector {
+      width: 60px; height: 2px; background: #E2E8F0;
+      flex-shrink: 0; transition: background 0.2s;
+    }
+
+    /* Active step styling */
+    .wizard-step-item.is-active .wizard-step-circle {
+      background: #ff56a1; color: #fff;
+    }
+    .wizard-step-item.is-active .wizard-step-label {
+      color: #3E4956; font-weight: 600;
+    }
+
+    /* Completed step styling */
+    .wizard-step-item.is-completed .wizard-step-circle {
+      background: #21BA45; color: #fff;
+    }
+    .wizard-step-item.is-completed .wizard-step-label {
+      color: #21BA45;
+    }
+    .wizard-connector.is-completed { background: #21BA45; }
+
+    /* Step content areas - all hidden by default */
+    .step-content { display: none; }
+
+    /* CSS :checked step switching */
+    #step1:checked ~ .wizard-content .step-1 { display: block; }
+    #step2:checked ~ .wizard-content .step-2 { display: block; }
+    #step3:checked ~ .wizard-content .step-3 { display: block; }
+    #step4:checked ~ .wizard-content .step-4 { display: block; }
+
+    /* Stepper visual states driven by radio */
+    /* Step 1 active */
+    #step1:checked ~ .wizard-content .wizard-stepper .ws-1 { }
+    #step1:checked ~ .wizard-content .wizard-stepper .ws-1 .wizard-step-circle {
+      background: #ff56a1; color: #fff;
+    }
+    #step1:checked ~ .wizard-content .wizard-stepper .ws-1 .wizard-step-label {
+      color: #3E4956; font-weight: 600;
+    }
+
+    /* Step 2 active */
+    #step2:checked ~ .wizard-content .wizard-stepper .ws-1 .wizard-step-circle { background: #21BA45; color: #fff; }
+    #step2:checked ~ .wizard-content .wizard-stepper .ws-1 .wizard-step-label { color: #21BA45; }
+    #step2:checked ~ .wizard-content .wizard-stepper .wc-1 { background: #21BA45; }
+    #step2:checked ~ .wizard-content .wizard-stepper .ws-2 .wizard-step-circle { background: #ff56a1; color: #fff; }
+    #step2:checked ~ .wizard-content .wizard-stepper .ws-2 .wizard-step-label { color: #3E4956; font-weight: 600; }
+
+    /* Step 3 active */
+    #step3:checked ~ .wizard-content .wizard-stepper .ws-1 .wizard-step-circle { background: #21BA45; color: #fff; }
+    #step3:checked ~ .wizard-content .wizard-stepper .ws-1 .wizard-step-label { color: #21BA45; }
+    #step3:checked ~ .wizard-content .wizard-stepper .wc-1 { background: #21BA45; }
+    #step3:checked ~ .wizard-content .wizard-stepper .ws-2 .wizard-step-circle { background: #21BA45; color: #fff; }
+    #step3:checked ~ .wizard-content .wizard-stepper .ws-2 .wizard-step-label { color: #21BA45; }
+    #step3:checked ~ .wizard-content .wizard-stepper .wc-2 { background: #21BA45; }
+    #step3:checked ~ .wizard-content .wizard-stepper .ws-3 .wizard-step-circle { background: #ff56a1; color: #fff; }
+    #step3:checked ~ .wizard-content .wizard-stepper .ws-3 .wizard-step-label { color: #3E4956; font-weight: 600; }
+
+    /* Step 4 active */
+    #step4:checked ~ .wizard-content .wizard-stepper .ws-1 .wizard-step-circle { background: #21BA45; color: #fff; }
+    #step4:checked ~ .wizard-content .wizard-stepper .ws-1 .wizard-step-label { color: #21BA45; }
+    #step4:checked ~ .wizard-content .wizard-stepper .wc-1 { background: #21BA45; }
+    #step4:checked ~ .wizard-content .wizard-stepper .ws-2 .wizard-step-circle { background: #21BA45; color: #fff; }
+    #step4:checked ~ .wizard-content .wizard-stepper .ws-2 .wizard-step-label { color: #21BA45; }
+    #step4:checked ~ .wizard-content .wizard-stepper .wc-2 { background: #21BA45; }
+    #step4:checked ~ .wizard-content .wizard-stepper .ws-3 .wizard-step-circle { background: #21BA45; color: #fff; }
+    #step4:checked ~ .wizard-content .wizard-stepper .ws-3 .wizard-step-label { color: #21BA45; }
+    #step4:checked ~ .wizard-content .wizard-stepper .wc-3 { background: #21BA45; }
+    #step4:checked ~ .wizard-content .wizard-stepper .ws-4 .wizard-step-circle { background: #ff56a1; color: #fff; }
+    #step4:checked ~ .wizard-content .wizard-stepper .ws-4 .wizard-step-label { color: #3E4956; font-weight: 600; }
+
+    /* Footer nav visibility - hide Back on step 1, change button text on step 4 */
+    .wizard-footer { display: none; }
+    .wizard-footer-1,
+    .wizard-footer-2,
+    .wizard-footer-3,
+    .wizard-footer-4 { display: none; }
+
+    #step1:checked ~ .wizard-content .wizard-footer-1 { display: flex; }
+    #step2:checked ~ .wizard-content .wizard-footer-2 { display: flex; }
+    #step3:checked ~ .wizard-content .wizard-footer-3 { display: flex; }
+    #step4:checked ~ .wizard-content .wizard-footer-4 { display: flex; }
+
+    .wizard-footer-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 0; margin-top: 24px; border-top: 1px solid #E2E8F0;
+    }
+
+    .wizard-footer-right { display: flex; gap: 10px; align-items: center; }
+
+    /* ============================================================
+       FORM ELEMENTS
+    ============================================================ */
+    .form-group { margin-bottom: 20px; }
+
+    .form-label {
+      display: block; font-size: 12px; font-weight: 600;
+      color: #79899D; text-transform: uppercase; letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%; padding: 10px 14px;
+      border: 1px solid #E2E8F0; border-radius: 6px;
+      font-family: inherit; font-size: 14px; color: #3E4956;
+      background: #fff; transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none; border-color: #ff56a1;
+      box-shadow: 0 0 0 3px rgba(255,86,161,0.1);
+    }
+
+    .form-textarea {
+      width: 100%; padding: 10px 14px;
+      border: 1px solid #E2E8F0; border-radius: 6px;
+      font-family: inherit; font-size: 14px; color: #3E4956;
+      background: #fff; transition: border-color 0.2s;
+      resize: vertical; min-height: 80px;
+    }
+
+    .form-textarea:focus {
+      outline: none; border-color: #ff56a1;
+      box-shadow: 0 0 0 3px rgba(255,86,161,0.1);
+    }
+
+    .form-hint {
+      font-size: 12px; color: #79899D; margin-top: 4px;
+      display: flex; justify-content: space-between;
+    }
+
+    .card-section {
+      background: #fff; border-radius: 8px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px; padding: 24px;
+    }
+
+    .card-section-title {
+      font-size: 16px; font-weight: 600; color: #3E4956;
+      margin-bottom: 20px;
+    }
+
+    .form-inner { max-width: 640px; margin: 0 auto; }
+
+    /* Segmented control for "Quando Iniciar" */
+    .segmented-control {
+      display: inline-flex; border: 1px solid #E2E8F0;
+      border-radius: 6px; overflow: hidden;
+    }
+
+    .segmented-radio { display: none; }
+
+    .segmented-label {
+      padding: 10px 24px; font-size: 13px; font-weight: 600;
+      color: #79899D; cursor: pointer; transition: all 0.2s;
+      background: #fff; display: inline-flex; align-items: center; gap: 6px;
+      border-right: 1px solid #E2E8F0;
+    }
+
+    .segmented-label:last-of-type { border-right: none; }
+
+    .segmented-label .material-icons { font-size: 16px; }
+
+    .segmented-radio:checked + .segmented-label {
+      background: #ff56a1; color: #fff;
+    }
+
+    /* Schedule fields - controlled via CSS */
+    .schedule-fields { display: none; margin-top: 16px; }
+    .schedule-fields-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+
+    .schedule-info { display: none; margin-top: 12px; }
+
+    #mode-now:checked ~ .schedule-info-now { display: flex; }
+    #mode-schedule:checked ~ .schedule-fields { display: block; }
+
+    .info-message {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; background: rgba(2,123,227,0.06);
+      border-radius: 6px; font-size: 13px; color: #027BE3;
+    }
+
+    .info-message .material-icons { font-size: 20px; }
+
+    /* Upload area */
+    .upload-area {
+      border: 2px dashed #E2E8F0; border-radius: 8px;
+      padding: 28px; text-align: center;
+      transition: all 0.2s; cursor: pointer;
+    }
+
+    .upload-area:hover {
+      border-color: #ff56a1; background: rgba(255,86,161,0.02);
+    }
+
+    .upload-icon {
+      font-size: 40px; color: #E2E8F0; margin-bottom: 8px;
+    }
+
+    .upload-text { font-size: 14px; color: #79899D; margin-bottom: 4px; }
+
+    .upload-hint { font-size: 12px; color: #9CA3AF; }
+
+    .upload-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border: 1px solid #E2E8F0; border-radius: 6px;
+      font-family: inherit; font-size: 13px; font-weight: 500;
+      color: #3E4956; background: #fff; cursor: pointer;
+      margin-top: 10px; transition: all 0.2s;
+    }
+
+    .upload-btn:hover { border-color: #ff56a1; color: #ff56a1; }
+
+    /* ============================================================
+       STEP 2 - PRODUCT GRID
+    ============================================================ */
+    .product-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; flex-wrap: wrap; gap: 12px;
+    }
+
+    .product-counter {
+      font-size: 14px; color: #79899D;
+    }
+
+    .product-counter-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #ff56a1; color: #fff; padding: 2px 8px;
+      border-radius: 10px; font-weight: 700; font-size: 13px;
+      min-width: 24px;
+    }
+
+    .product-search {
+      position: relative; margin-bottom: 16px;
+    }
+
+    .product-search .material-icons {
+      position: absolute; left: 12px; top: 50%;
+      transform: translateY(-50%); font-size: 18px; color: #79899D;
+      pointer-events: none;
+    }
+
+    .product-search-input {
+      width: 100%; padding: 10px 14px 10px 38px;
+      border: 1px solid #E2E8F0; border-radius: 6px;
+      font-family: inherit; font-size: 14px; color: #3E4956;
+      background: #fff; transition: border-color 0.2s;
+    }
+
+    .product-search-input:focus {
+      outline: none; border-color: #ff56a1;
+      box-shadow: 0 0 0 3px rgba(255,86,161,0.1);
+    }
+
+    .product-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .product-select-card {
+      background: #fff; border: 2px solid #E2E8F0;
+      border-radius: 8px; overflow: hidden;
+      cursor: pointer; transition: all 0.2s; position: relative;
+    }
+
+    .product-select-card:hover {
+      border-color: #ff56a1;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    /* Checkbox-based product selection via CSS */
+    .product-checkbox { display: none; }
+
+    .product-checkbox:checked + .product-select-card {
+      border-color: #ff56a1;
+      background: rgba(255,86,161,0.02);
+    }
+
+    .product-checkbox:checked + .product-select-card .product-check {
+      opacity: 1;
+    }
+
+    .product-check {
+      position: absolute; top: 8px; right: 8px;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: #ff56a1; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; opacity: 0; transition: opacity 0.2s;
+      z-index: 2;
+    }
+
+    .product-img {
+      width: 100%; aspect-ratio: 1/1; object-fit: cover;
+      display: block; background: #f5f5f5;
+    }
+
+    .product-info {
+      padding: 12px;
+    }
+
+    .product-name {
+      font-size: 13px; font-weight: 500; color: #3E4956;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+      line-height: 1.3; min-height: 34px;
+    }
+
+    .product-price {
+      font-size: 14px; font-weight: 700; color: #ff56a1; margin-top: 4px;
+    }
+
+    /* ============================================================
+       STEP 3 - PROMOTION
+    ============================================================ */
+    .promo-toggle-section {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px; padding-bottom: 16px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .promo-toggle-text {
+      font-size: 14px; font-weight: 500; color: #3E4956;
+    }
+
+    /* Toggle switch */
+    .toggle-input { display: none; }
+
+    .toggle-switch {
+      position: relative; width: 44px; height: 24px;
+      background: #E2E8F0; border-radius: 12px;
+      cursor: pointer; transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 20px; height: 20px; background: #fff;
+      border-radius: 50%; transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .toggle-input:checked + .toggle-switch {
+      background: #ff56a1;
+    }
+
+    .toggle-input:checked + .toggle-switch::after {
+      transform: translateX(20px);
+    }
+
+    .promo-fields { display: none; }
+    #promo-toggle:checked ~ .promo-fields { display: block; }
+
+    .coupon-row {
+      display: flex; gap: 10px; align-items: flex-end;
+    }
+
+    .coupon-row .form-group { flex: 1; margin-bottom: 0; }
+
+    .btn-generate {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 16px; border: 1px solid #E2E8F0; border-radius: 6px;
+      font-family: inherit; font-size: 13px; font-weight: 500;
+      color: #3E4956; background: #fff; cursor: pointer;
+      transition: all 0.2s; white-space: nowrap; height: 42px;
+    }
+
+    .btn-generate:hover { border-color: #ff56a1; color: #ff56a1; }
+    .btn-generate .material-icons { font-size: 18px; }
+
+    /* Radio-based discount type */
+    .discount-type-group {
+      display: flex; gap: 16px; margin-bottom: 12px;
+    }
+
+    .discount-radio { display: none; }
+
+    .discount-type-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border: 1px solid #E2E8F0; border-radius: 6px;
+      font-size: 13px; font-weight: 500; color: #79899D;
+      cursor: pointer; transition: all 0.2s;
+    }
+
+    .discount-radio:checked + .discount-type-label {
+      border-color: #ff56a1; color: #ff56a1; background: rgba(255,86,161,0.04);
+    }
+
+    .discount-value-row {
+      display: flex; gap: 12px; align-items: flex-end;
+    }
+
+    .discount-value-row .form-group { flex: 1; margin-bottom: 0; }
+
+    .discount-suffix {
+      padding: 10px 16px; background: #f5f5f5; border: 1px solid #E2E8F0;
+      border-radius: 6px; font-size: 14px; font-weight: 600; color: #3E4956;
+      height: 42px; display: flex; align-items: center;
+    }
+
+    .shipping-toggle-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px; background: #fafafa; border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .shipping-toggle-text { flex: 1; }
+    .shipping-toggle-text strong { font-size: 14px; color: #3E4956; display: block; }
+    .shipping-toggle-text small { font-size: 12px; color: #79899D; }
+
+    /* Promo preview banner */
+    .promo-preview {
+      background: #f5f5f5; border-radius: 8px;
+      padding: 16px; margin-top: 20px;
+    }
+
+    .promo-preview-label {
+      font-size: 11px; font-weight: 600; color: #79899D;
+      text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;
+    }
+
+    .promo-banner {
+      background: linear-gradient(135deg, #ff56a1, #d6006e);
+      color: #fff; border-radius: 6px;
+      padding: 12px 16px; display: flex;
+      align-items: center; gap: 12px;
+      font-size: 13px; font-weight: 600;
+    }
+
+    .promo-banner .material-icons { font-size: 20px; }
+
+    .promo-banner-sep {
+      width: 1px; height: 20px; background: rgba(255,255,255,0.3);
+    }
+
+    /* ============================================================
+       STEP 4 - REVIEW
+    ============================================================ */
+    .review-section {
+      background: #fff; border-radius: 8px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      padding: 20px; margin-bottom: 16px;
+    }
+
+    .review-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .review-title {
+      font-size: 12px; font-weight: 600; color: #79899D;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    .review-edit {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 12px; font-weight: 500; color: #ff56a1;
+      cursor: pointer; background: none; border: none;
+      font-family: inherit; padding: 4px 8px; border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .review-edit:hover { background: rgba(255,86,161,0.06); }
+    .review-edit .material-icons { font-size: 14px; }
+
+    .review-row {
+      display: flex; gap: 8px; margin-bottom: 8px; font-size: 14px;
+    }
+
+    .review-row-label {
+      color: #79899D; font-weight: 500; min-width: 100px;
+    }
+
+    .review-row-value { color: #3E4956; font-weight: 400; }
+
+    .review-products-mini {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+
+    .review-product-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 10px; background: #f9f9f9;
+      border-radius: 6px; font-size: 13px;
+    }
+
+    .review-product-img {
+      width: 36px; height: 36px; border-radius: 6px;
+      object-fit: cover; background: #f0f0f0;
+    }
+
+    .review-product-name {
+      font-weight: 500; color: #3E4956;
+      max-width: 180px; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    .review-product-price {
+      font-size: 12px; font-weight: 700; color: #ff56a1;
+    }
+
+    .review-promo-badges {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+
+    .review-promo-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600;
+    }
+
+    .review-promo-badge.coupon {
+      background: rgba(255,86,161,0.08); color: #ff56a1;
+    }
+
+    .review-promo-badge.discount {
+      background: rgba(33,186,69,0.08); color: #21BA45;
+    }
+
+    .review-promo-badge.shipping {
+      background: rgba(2,123,227,0.08); color: #027BE3;
+    }
+
+    .review-promo-badge .material-icons { font-size: 16px; }
+
+    /* Final action buttons */
+    .final-actions {
+      display: flex; justify-content: center; gap: 16px;
+      padding: 24px 0; margin-top: 8px;
+    }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn-primary {
+      background: #ff56a1; color: #fff; border: none; border-radius: 6px;
+      padding: 10px 20px; font-family: inherit; font-size: 13px;
+      font-weight: 700; cursor: pointer; display: inline-flex;
+      align-items: center; gap: 6px; transition: background 0.2s;
+      text-decoration: none;
+    }
+    .btn-primary:hover { background: #e0408a; }
+    .btn-primary .material-icons { font-size: 18px; }
+
+    .btn-primary-lg {
+      padding: 12px 28px; font-size: 14px;
+    }
+
+    .btn-primary-gradient {
+      background: linear-gradient(135deg, #ff56a1, #d6006e);
+    }
+    .btn-primary-gradient:hover {
+      background: linear-gradient(135deg, #e0408a, #b8005e);
+    }
+
+    .btn-outline {
+      background: #fff; color: #3E4956; border: 1px solid #E2E8F0;
+      border-radius: 6px; padding: 10px 20px; font-family: inherit;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .btn-outline:hover { border-color: #ff56a1; color: #ff56a1; }
+    .btn-outline .material-icons { font-size: 18px; }
+
+    .btn-ghost {
+      background: transparent; color: #79899D; border: none;
+      padding: 10px 16px; font-family: inherit; font-size: 13px;
+      cursor: pointer; display: inline-flex; align-items: center;
+      gap: 4px; transition: color 0.2s; text-decoration: none;
+    }
+    .btn-ghost:hover { color: #3E4956; }
+    .btn-ghost .material-icons { font-size: 18px; }
+
+    /* ============================================================
+       SUCCESS TOAST
+    ============================================================ */
+    .toast {
+      display: none; position: fixed; top: 20px; right: 20px;
+      background: #21BA45; color: #fff; padding: 14px 24px;
+      border-radius: 8px; font-size: 14px; font-weight: 500;
+      z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      align-items: center; gap: 8px;
+    }
+
+    .toast .material-icons { font-size: 20px; }
+
+    .toast.show { display: flex; animation: toastSlide 0.3s ease; }
+
+    @keyframes toastSlide {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* ============================================================
+       MOBILE SIDEBAR OVERLAY
+    ============================================================ */
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 150;
+    }
+
+    .sidebar-overlay.show { display: block; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1024px) {
+      .product-grid { grid-template-columns: repeat(3, 1fr); }
+
+      .wizard-step-label { display: block; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%); width: 220px;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .sidebar.open { transform: translateX(0); }
+
+      .sidebar.open .sidebar-item-label,
+      .sidebar.open .sidebar-avatar-name,
+      .sidebar.open .sidebar-badge-novo { opacity: 1; }
+
+      .header { left: 0; }
+      .header-hamburger { display: flex; }
+      .main-content { padding-left: 0; }
+      .page { padding: 16px; }
+
+      .header-btn > span { display: none; }
+      .header-breadcrumb { display: none; }
+
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .wizard-stepper { padding: 16px 8px; gap: 0; }
+
+      .wizard-step-label { display: none; }
+
+      .wizard-step-item { padding: 0 8px; }
+
+      .wizard-connector { width: 24px; }
+
+      .schedule-fields-grid { grid-template-columns: 1fr; }
+
+      .form-inner { max-width: 100%; }
+
+      .review-product-item { flex-basis: 100%; }
+
+      .final-actions { flex-direction: column; align-items: stretch; }
+      .final-actions .btn-primary,
+      .final-actions .btn-outline { justify-content: center; }
+
+      .coupon-row { flex-direction: column; }
+      .coupon-row .btn-generate { width: 100%; justify-content: center; }
+
+      .discount-type-group { flex-direction: column; gap: 8px; }
+    }
+
+    @media (max-width: 480px) {
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .product-info { padding: 8px; }
+      .product-name { font-size: 12px; min-height: 28px; }
+      .product-price { font-size: 13px; }
+
+      .wizard-footer-bar {
+        flex-direction: column; gap: 12px;
+      }
+
+      .wizard-footer-right { width: 100%; }
+      .wizard-footer-right .btn-primary,
+      .wizard-footer-right .btn-outline {
+        flex: 1; justify-content: center;
+      }
+
+      .page-title { font-size: 18px; }
+
+      .wizard-step-circle { width: 32px; height: 32px; }
+      .wizard-connector { width: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     SIDEBAR
+============================================================ -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-avatar">
+    <div class="sidebar-avatar-circle">DAI</div>
+    <span class="sidebar-avatar-name">LOJADAICALMON</span>
+  </div>
+
+  <div class="sidebar-nav">
+    <a href="dashboard.html" class="sidebar-item" title="Homepage">
+      <i class="material-icons">home</i>
+      <span class="sidebar-item-label">Homepage</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Minha Loja">
+      <i class="material-icons">store</i>
+      <span class="sidebar-item-label">Minha Loja</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Meus Favoritos">
+      <i class="material-icons">thumb_up</i>
+      <span class="sidebar-item-label">Meus Favoritos</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Minha Carteira">
+      <i class="material-icons">wallet</i>
+      <span class="sidebar-item-label">Minha Carteira</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Minhas Vendas">
+      <i class="material-icons">shopping_cart</i>
+      <span class="sidebar-item-label">Minhas Vendas</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <a href="minhas-lives.html" class="sidebar-item" title="Minhas Lives">
+      <i class="material-icons">videocam</i>
+      <span class="sidebar-item-label">Minhas Lives</span>
+      <span class="sidebar-badge-novo">NOVO</span>
+    </a>
+    <a href="criar-live.html" class="sidebar-item active" title="Criar Live">
+      <i class="material-icons">add_circle</i>
+      <span class="sidebar-item-label">Criar Live</span>
+      <span class="sidebar-badge-novo">NOVO</span>
+    </a>
+    <a href="compartilhar-live.html" class="sidebar-item" title="Compartilhar">
+      <i class="material-icons">share</i>
+      <span class="sidebar-item-label">Compartilhar</span>
+      <span class="sidebar-badge-novo">NOVO</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <a href="#" class="sidebar-item" title="FAQ">
+      <i class="material-icons">help</i>
+      <span class="sidebar-item-label">FAQ</span>
+    </a>
+  </div>
+
+  <div class="sidebar-bottom">
+    <a href="#" class="sidebar-item" title="Sair">
+      <i class="material-icons">logout</i>
+      <span class="sidebar-item-label">Sair</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header class="header">
+  <div class="header-left">
+    <button class="header-hamburger" onclick="document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebarOverlay').classList.toggle('show');">
+      <i class="material-icons">menu</i>
+    </button>
+    <div class="header-brand">OBOTICARIO</div>
+    <div class="header-breadcrumb">
+      <a href="dashboard.html">Homepage</a> / <a href="minhas-lives.html">Minhas Lives</a> / <span>Criar Live</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="header-btn">
+      <span>Meu Espaco</span>
+      <i class="material-icons" style="font-size:16px;">expand_more</i>
+    </button>
+    <div class="header-notification-wrap">
+      <button class="header-btn" style="padding:6px 8px;">
+        <i class="material-icons">notifications</i>
+      </button>
+      <span class="notification-badge">10</span>
+    </div>
+    <div class="header-avatar">DAI</div>
+  </div>
+</header>
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================ -->
+<main class="main-content">
+  <div class="page">
+
+    <!-- Page Title -->
+    <div class="page-title-row">
+      <div>
+        <h1 class="page-title">Criar Nova Live</h1>
+        <p class="page-title-sub">Preencha as informacoes para criar ou agendar sua transmissao</p>
+      </div>
+    </div>
+
+    <!-- Hidden Radio Inputs for Step Control -->
+    <input type="radio" name="wizard-step" id="step1" class="wizard-radio" checked>
+    <input type="radio" name="wizard-step" id="step2" class="wizard-radio">
+    <input type="radio" name="wizard-step" id="step3" class="wizard-radio">
+    <input type="radio" name="wizard-step" id="step4" class="wizard-radio">
+
+    <div class="wizard-content">
+
+      <!-- ========================================================
+           STEPPER PROGRESS BAR
+      ======================================================== -->
+      <div class="wizard-stepper">
+        <label class="wizard-step-item ws-1" for="step1">
+          <div class="wizard-step-circle">
+            <i class="material-icons">info</i>
+          </div>
+          <span class="wizard-step-label">Informacoes</span>
+        </label>
+
+        <div class="wizard-connector wc-1"></div>
+
+        <label class="wizard-step-item ws-2" for="step2">
+          <div class="wizard-step-circle">
+            <i class="material-icons">shopping_cart</i>
+          </div>
+          <span class="wizard-step-label">Produtos</span>
+        </label>
+
+        <div class="wizard-connector wc-2"></div>
+
+        <label class="wizard-step-item ws-3" for="step3">
+          <div class="wizard-step-circle">
+            <i class="material-icons">local_offer</i>
+          </div>
+          <span class="wizard-step-label">Promocao</span>
+        </label>
+
+        <div class="wizard-connector wc-3"></div>
+
+        <label class="wizard-step-item ws-4" for="step4">
+          <div class="wizard-step-circle">
+            <i class="material-icons">check_circle</i>
+          </div>
+          <span class="wizard-step-label">Revisao</span>
+        </label>
+      </div>
+
+      <!-- ========================================================
+           STEP 1: INFORMACOES BASICAS
+      ======================================================== -->
+      <div class="step-content step-1">
+        <div class="card-section">
+          <div class="card-section-title">Informacoes Basicas</div>
+
+          <div class="form-inner">
+            <!-- Titulo -->
+            <div class="form-group">
+              <label class="form-label">Titulo da Live *</label>
+              <input type="text" class="form-input" placeholder='Ex: "Especial Kit Lily Blanche"' maxlength="80" value="Especial Kit Lily Blanche - Noite de Beleza">
+              <div class="form-hint">
+                <span>Minimo 5 caracteres</span>
+                <span>29/80</span>
+              </div>
+            </div>
+
+            <!-- Descricao -->
+            <div class="form-group">
+              <label class="form-label">Descricao</label>
+              <textarea class="form-textarea" placeholder="Descreva o que voce vai apresentar nesta live..." maxlength="500" rows="3">Apresentacao exclusiva dos kits Lily Blanche com descontos especiais para quem acompanhar ao vivo!</textarea>
+              <div class="form-hint">
+                <span>Opcional</span>
+                <span>96/500</span>
+              </div>
+            </div>
+
+            <!-- Thumbnail Upload -->
+            <div class="form-group">
+              <label class="form-label">Imagem de Capa</label>
+              <div class="upload-area">
+                <i class="material-icons upload-icon">cloud_upload</i>
+                <div class="upload-text">Arraste uma imagem ou</div>
+                <button class="upload-btn" type="button">
+                  <i class="material-icons" style="font-size:16px;">image</i>
+                  Escolher Arquivo
+                </button>
+                <div class="upload-hint" style="margin-top:8px;">JPG ou PNG, max 2MB. Recomendado: 1280x720px (16:9)</div>
+              </div>
+            </div>
+
+            <!-- Quando Iniciar - Segmented Control with CSS -->
+            <div class="form-group">
+              <label class="form-label">Quando Iniciar</label>
+              <div class="segmented-control">
+                <input type="radio" name="start-mode" id="mode-now" class="segmented-radio">
+                <label for="mode-now" class="segmented-label">
+                  <i class="material-icons">play_circle</i>
+                  Iniciar Agora
+                </label>
+                <input type="radio" name="start-mode" id="mode-schedule" class="segmented-radio" checked>
+                <label for="mode-schedule" class="segmented-label">
+                  <i class="material-icons">calendar_today</i>
+                  Agendar
+                </label>
+              </div>
+
+              <!-- Info for "Iniciar Agora" -->
+              <div class="schedule-info schedule-info-now">
+                <div class="info-message">
+                  <i class="material-icons">info</i>
+                  A live sera iniciada assim que voce confirmar na ultima etapa.
+                </div>
+              </div>
+
+              <!-- Fields for "Agendar" -->
+              <div class="schedule-fields">
+                <div class="schedule-fields-grid">
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label">Data</label>
+                    <input type="date" class="form-input" value="2026-02-28">
+                  </div>
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label">Horario</label>
+                    <input type="time" class="form-input" value="19:00">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Step 1 -->
+        <div class="wizard-footer-bar wizard-footer-1">
+          <a href="minhas-lives.html" class="btn-ghost">
+            <i class="material-icons">close</i>
+            Cancelar
+          </a>
+          <div class="wizard-footer-right">
+            <label for="step2" class="btn-primary" style="cursor:pointer;">
+              Proximo
+              <i class="material-icons">arrow_forward</i>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================
+           STEP 2: SELECIONAR PRODUTOS
+      ======================================================== -->
+      <div class="step-content step-2">
+        <div class="card-section">
+          <div class="product-header">
+            <div class="card-section-title" style="margin-bottom:0;">Selecionar Produtos</div>
+            <div class="product-counter">
+              Selecionados: <span class="product-counter-num">4</span> de 7
+            </div>
+          </div>
+
+          <div class="product-search">
+            <i class="material-icons">search</i>
+            <input type="text" class="product-search-input" placeholder="Buscar produto pelo nome...">
+          </div>
+
+          <div class="product-grid">
+            <!-- Product 1 -->
+            <div style="position:relative;">
+              <input type="checkbox" id="prod1" class="product-checkbox" checked>
+              <label for="prod1" class="product-select-card">
+                <div class="product-check"><i class="material-icons" style="font-size:16px;">check</i></div>
+                <img src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/5d76ce8a-55e4-4667-bc41-71ddf09a148a-bot-2024071018.jpg" alt="Combo L'eau de Lily" class="product-img">
+                <div class="product-info">
+                  <div class="product-name">Combo L'eau de Lily: Desodorante Colonia 75ml + Creme 250g</div>
+                  <div class="product-price">R$ 329,80</div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Product 2 -->
+            <div style="position:relative;">
+              <input type="checkbox" id="prod2" class="product-checkbox" checked>
+              <label for="prod2" class="product-select-card">
+                <div class="product-check"><i class="material-icons" style="font-size:16px;">check</i></div>
+                <img src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2e945662-0a1f-4b71-bbce-d56c17bf6401-bot-2025030502.jpg" alt="Combo Lily Blanche" class="product-img">
+                <div class="product-info">
+                  <div class="product-name">Combo Lily Blanche: Desodorante Colonia 75ml + Creme 250g</div>
+                  <div class="product-price">R$ 364,80</div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Product 3 -->
+            <div style="position:relative;">
+              <input type="checkbox" id="prod3" class="product-checkbox" checked>
+              <label for="prod3" class="product-select-card">
+                <div class="product-check"><i class="material-icons" style="font-size:16px;">check</i></div>
+                <img src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2f161d48-d3a6-4c49-9fbe-8eed0400d422-bot-57882-l-eau-de-lily-blanche-body-spray-01.jpg" alt="Body Spray L'eau de Lily Blanche" class="product-img">
+                <div class="product-info">
+                  <div class="product-name">Body Spray L'eau de Lily Blanche 100ml</div>
+                  <div class="product-price">R$ 49,90</div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Product 4 -->
+            <div style="position:relative;">
+              <input type="checkbox" id="prod4" class="product-checkbox" checked>
+              <label for="prod4" class="product-select-card">
+                <div class="product-check"><i class="material-icons" style="font-size:16px;">check</i></div>
+                <img src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/ae6187eb-2dbc-4580-b916-d22b2bc6cfcd-bot-86895-l-eau-de-lily-blanche-01.jpg" alt="L'eau de Lily Blanche Desodorante Colonia" class="product-img">
+                <div class="product-info">
+                  <div class="product-name">L'eau de Lily Blanche Desodorante Colonia 75ml</div>
+                  <div class="product-price">R$ 219,90</div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Product 5 -->
+            <div style="position:relative;">
+              <input type="checkbox" id="prod5" class="product-checkbox">
+              <label for="prod5" class="product-select-card">
+                <div class="product-check"><i class="material-icons" style="font-size:16px;">check</i></div>
+                <img src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/73463997-b06a-40b2-afe9-dfe37d4b2879-bot-q2025030516.jpg" alt="Combo QDB Batons" class="product-img">
+                <div class="product-info">
+                  <div class="product-name">Combo QDB Batons: Hidratante Nude + Mate Malva 3,8g</div>
+                  <div class="product-price">R$ 105,80</div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Product 6 -->
+            <div style="position:relative;">
+              <input type="checkbox" id="prod6" class="product-checkbox">
+              <label for="prod6" class="product-select-card">
+                <div class="product-check"><i class="material-icons" style="font-size:16px;">check</i></div>
+                <img src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/c10e4cb9-69cd-4da6-ae6d-e8050eeb97df-e79371-53435-53436-84628-84687-estojo-maes-siage-nutri-rose-1.jpg" alt="Kit Presente Siage" class="product-img">
+                <div class="product-info">
+                  <div class="product-name">Kit Presente Siage (4 itens)</div>
+                  <div class="product-price">R$ 167,96</div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Product 7 -->
+            <div style="position:relative;">
+              <input type="checkbox" id="prod7" class="product-checkbox">
+              <label for="prod7" class="product-select-card">
+                <div class="product-check"><i class="material-icons" style="font-size:16px;">check</i></div>
+                <img src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/aa908e83-82ba-4e7f-8f5d-227f8219f77f-bot-87421-kit-maes-nativa-spa-ameixa-01.jpg" alt="Kit Presente Nativa Spa Ameixa" class="product-img">
+                <div class="product-info">
+                  <div class="product-name">Kit Presente Nativa Spa Ameixa (3 itens)</div>
+                  <div class="product-price">R$ 136,90</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Step 2 -->
+        <div class="wizard-footer-bar wizard-footer-2">
+          <a href="minhas-lives.html" class="btn-ghost">
+            <i class="material-icons">close</i>
+            Cancelar
+          </a>
+          <div class="wizard-footer-right">
+            <label for="step1" class="btn-outline" style="cursor:pointer;">
+              <i class="material-icons">arrow_back</i>
+              Voltar
+            </label>
+            <label for="step3" class="btn-primary" style="cursor:pointer;">
+              Proximo
+              <i class="material-icons">arrow_forward</i>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================
+           STEP 3: PROMOCAO
+      ======================================================== -->
+      <div class="step-content step-3">
+        <div class="card-section">
+          <div class="card-section-title">Configurar Promocao</div>
+
+          <div class="form-inner">
+            <!-- Toggle to enable promo -->
+            <div class="promo-toggle-section">
+              <input type="checkbox" id="promo-toggle" class="toggle-input" checked>
+              <label for="promo-toggle" class="toggle-switch"></label>
+              <span class="promo-toggle-text">Adicionar promocao a esta live</span>
+            </div>
+
+            <div class="promo-fields">
+              <!-- Coupon Code -->
+              <div class="form-group">
+                <label class="form-label">Cupom de Desconto</label>
+                <div class="coupon-row">
+                  <div class="form-group">
+                    <input type="text" class="form-input" value="LIVE25OFF" style="text-transform:uppercase; font-weight:600; letter-spacing:1px;">
+                  </div>
+                  <button class="btn-generate" type="button">
+                    <i class="material-icons">auto_awesome</i>
+                    Gerar Codigo
+                  </button>
+                </div>
+              </div>
+
+              <!-- Discount Type -->
+              <div class="form-group">
+                <label class="form-label">Tipo de Desconto</label>
+                <div class="discount-type-group">
+                  <div>
+                    <input type="radio" name="discount-type" id="dtype-percent" class="discount-radio" checked>
+                    <label for="dtype-percent" class="discount-type-label">
+                      <i class="material-icons" style="font-size:18px;">percent</i>
+                      Porcentagem (%)
+                    </label>
+                  </div>
+                  <div>
+                    <input type="radio" name="discount-type" id="dtype-fixed" class="discount-radio">
+                    <label for="dtype-fixed" class="discount-type-label">
+                      <i class="material-icons" style="font-size:18px;">attach_money</i>
+                      Valor fixo (R$)
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Discount Value -->
+              <div class="form-group">
+                <label class="form-label">Valor do Desconto</label>
+                <div class="discount-value-row">
+                  <div class="form-group">
+                    <input type="number" class="form-input" value="15" min="1" max="100" style="max-width:120px;">
+                  </div>
+                  <div class="discount-suffix">%</div>
+                </div>
+              </div>
+
+              <!-- Free Shipping Toggle -->
+              <div class="shipping-toggle-row">
+                <div class="shipping-toggle-text">
+                  <strong>
+                    <i class="material-icons" style="font-size:18px; vertical-align:middle; margin-right:4px;">local_shipping</i>
+                    Frete Gratis
+                  </strong>
+                  <small>Ativar frete gratis para compras realizadas durante a live</small>
+                </div>
+                <input type="checkbox" id="shipping-toggle" class="toggle-input" checked>
+                <label for="shipping-toggle" class="toggle-switch"></label>
+              </div>
+
+              <!-- Promo Message -->
+              <div class="form-group">
+                <label class="form-label">Mensagem Promocional</label>
+                <textarea class="form-textarea" placeholder="Mensagem que sera exibida para os espectadores..." maxlength="150" rows="2">Aproveite descontos exclusivos nesta live! Use o cupom LIVE25OFF</textarea>
+                <div class="form-hint">
+                  <span>Sera exibida no banner de promocao</span>
+                  <span>58/150</span>
+                </div>
+              </div>
+
+              <!-- Preview Banner -->
+              <div class="promo-preview">
+                <div class="promo-preview-label">Preview do Banner</div>
+                <div class="promo-banner">
+                  <i class="material-icons">local_offer</i>
+                  CUPOM: LIVE25OFF
+                  <div class="promo-banner-sep"></div>
+                  25% OFF
+                  <div class="promo-banner-sep"></div>
+                  <i class="material-icons">local_shipping</i>
+                  FRETE GRATIS
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Step 3 -->
+        <div class="wizard-footer-bar wizard-footer-3">
+          <a href="minhas-lives.html" class="btn-ghost">
+            <i class="material-icons">close</i>
+            Cancelar
+          </a>
+          <div class="wizard-footer-right">
+            <label for="step2" class="btn-outline" style="cursor:pointer;">
+              <i class="material-icons">arrow_back</i>
+              Voltar
+            </label>
+            <label for="step4" class="btn-primary" style="cursor:pointer;">
+              Proximo
+              <i class="material-icons">arrow_forward</i>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================
+           STEP 4: REVISAO
+      ======================================================== -->
+      <div class="step-content step-4">
+
+        <!-- Review: Informacoes -->
+        <div class="review-section">
+          <div class="review-header">
+            <div class="review-title">Informacoes Basicas</div>
+            <label for="step1" class="review-edit" style="cursor:pointer;">
+              <i class="material-icons">edit</i>
+              Editar
+            </label>
+          </div>
+          <div class="review-row">
+            <span class="review-row-label">Titulo:</span>
+            <span class="review-row-value">Especial Kit Lily Blanche - Noite de Beleza</span>
+          </div>
+          <div class="review-row">
+            <span class="review-row-label">Descricao:</span>
+            <span class="review-row-value">Apresentacao exclusiva dos kits Lily Blanche com descontos especiais para quem acompanhar ao vivo!</span>
+          </div>
+          <div class="review-row">
+            <span class="review-row-label">Quando:</span>
+            <span class="review-row-value">
+              <i class="material-icons" style="font-size:16px;vertical-align:middle;margin-right:4px;color:#027BE3;">calendar_today</i>
+              Agendar - 28/02/2026 as 19:00
+            </span>
+          </div>
+        </div>
+
+        <!-- Review: Produtos -->
+        <div class="review-section">
+          <div class="review-header">
+            <div class="review-title">Produtos Selecionados (4)</div>
+            <label for="step2" class="review-edit" style="cursor:pointer;">
+              <i class="material-icons">edit</i>
+              Editar
+            </label>
+          </div>
+          <div class="review-products-mini">
+            <div class="review-product-item">
+              <img src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/5d76ce8a-55e4-4667-bc41-71ddf09a148a-bot-2024071018.jpg" alt="" class="review-product-img">
+              <div>
+                <div class="review-product-name">Combo L'eau de Lily</div>
+                <div class="review-product-price">R$ 329,80</div>
+              </div>
+            </div>
+            <div class="review-product-item">
+              <img src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2e945662-0a1f-4b71-bbce-d56c17bf6401-bot-2025030502.jpg" alt="" class="review-product-img">
+              <div>
+                <div class="review-product-name">Combo Lily Blanche</div>
+                <div class="review-product-price">R$ 364,80</div>
+              </div>
+            </div>
+            <div class="review-product-item">
+              <img src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2f161d48-d3a6-4c49-9fbe-8eed0400d422-bot-57882-l-eau-de-lily-blanche-body-spray-01.jpg" alt="" class="review-product-img">
+              <div>
+                <div class="review-product-name">Body Spray Lily Blanche</div>
+                <div class="review-product-price">R$ 49,90</div>
+              </div>
+            </div>
+            <div class="review-product-item">
+              <img src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/ae6187eb-2dbc-4580-b916-d22b2bc6cfcd-bot-86895-l-eau-de-lily-blanche-01.jpg" alt="" class="review-product-img">
+              <div>
+                <div class="review-product-name">L'eau de Lily Blanche 75ml</div>
+                <div class="review-product-price">R$ 219,90</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review: Promocao -->
+        <div class="review-section">
+          <div class="review-header">
+            <div class="review-title">Promocao</div>
+            <label for="step3" class="review-edit" style="cursor:pointer;">
+              <i class="material-icons">edit</i>
+              Editar
+            </label>
+          </div>
+          <div class="review-promo-badges">
+            <div class="review-promo-badge coupon">
+              <i class="material-icons">local_offer</i>
+              LIVE25OFF
+            </div>
+            <div class="review-promo-badge discount">
+              <i class="material-icons">percent</i>
+              25% OFF
+            </div>
+            <div class="review-promo-badge shipping">
+              <i class="material-icons">local_shipping</i>
+              Frete Gratis
+            </div>
+          </div>
+          <div class="review-row" style="margin-top:12px;">
+            <span class="review-row-label">Mensagem:</span>
+            <span class="review-row-value" style="font-style:italic;">"Aproveite descontos exclusivos nesta live! Use o cupom LIVE25OFF"</span>
+          </div>
+        </div>
+
+        <!-- Final Actions -->
+        <div class="final-actions">
+          <a href="minhas-lives.html" class="btn-outline btn-primary-lg">
+            <i class="material-icons">calendar_today</i>
+            Agendar Live
+          </a>
+          <a href="sala-live.html" class="btn-primary btn-primary-lg btn-primary-gradient">
+            <i class="material-icons">play_circle</i>
+            Iniciar Live Agora
+          </a>
+        </div>
+
+        <!-- Footer Step 4 -->
+        <div class="wizard-footer-bar wizard-footer-4">
+          <a href="minhas-lives.html" class="btn-ghost">
+            <i class="material-icons">close</i>
+            Cancelar
+          </a>
+          <div class="wizard-footer-right">
+            <label for="step3" class="btn-outline" style="cursor:pointer;">
+              <i class="material-icons">arrow_back</i>
+              Voltar
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /wizard-content -->
+
+  </div>
+</main>
+
+<!-- Success Toast (shown on action) -->
+<div class="toast" id="successToast">
+  <i class="material-icons">check_circle</i>
+  Live agendada com sucesso!
+</div>
+
+<script>
+  // Minimal JS for sidebar toggle on mobile (same pattern as minhas-lives.html)
+  function toggleSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+
+  document.getElementById('sidebarOverlay').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.remove('open');
+    this.classList.remove('show');
+  });
+</script>
+
+</body>
+</html>

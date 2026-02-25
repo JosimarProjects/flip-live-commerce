@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flip - Minhas Lives | LOJADAICALMON</title>
+
+  <!-- Google Fonts - Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Roboto, -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #f5f5f5;
+      color: #3E4956;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ============================================================
+       SIDEBAR
+    ============================================================ */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 57px;
+      background: #222222;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .sidebar:hover {
+      width: 220px;
+    }
+
+    .sidebar-avatar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      min-height: 57px;
+    }
+
+    .sidebar-avatar-circle {
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      border-radius: 50%;
+      background: #ff56a1;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .sidebar-avatar-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #F7F7F7;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .sidebar:hover .sidebar-avatar-name {
+      opacity: 1;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 6px 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      color: #8C8C8C;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      position: relative;
+      min-height: 42px;
+      text-decoration: none;
+    }
+
+    .sidebar-item:hover {
+      color: #F7F7F7;
+      background: #2F3235;
+    }
+
+    .sidebar-item.active {
+      color: #F7F7F7;
+      background: #2F3235;
+    }
+
+    .sidebar-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #F7F7F7;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .sidebar-item .material-icons {
+      font-size: 22px;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .sidebar-item-label {
+      font-size: 13px;
+      font-weight: 400;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .sidebar:hover .sidebar-item-label {
+      opacity: 1;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 6px 12px;
+    }
+
+    .sidebar-badge-novo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ff56a1;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 3px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      line-height: 1;
+      opacity: 0;
+      transition: opacity 0.2s;
+      margin-left: auto;
+    }
+
+    .sidebar:hover .sidebar-badge-novo {
+      opacity: 1;
+    }
+
+    .sidebar-bottom {
+      padding: 6px 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 57px;
+      right: 0;
+      height: 61px;
+      background: #fff;
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .header-brand {
+      font-size: 16px;
+      font-weight: 900;
+      color: #3E4956;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+    }
+
+    .header-breadcrumb {
+      font-size: 12px;
+      color: #79899D;
+    }
+
+    .header-breadcrumb a {
+      color: #79899D;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .header-breadcrumb a:hover {
+      color: #ff56a1;
+    }
+
+    .header-breadcrumb span {
+      color: #3E4956;
+      font-weight: 500;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: #3E4956;
+    }
+
+    .header-btn:hover { background: #f8fafc; }
+    .header-btn .material-icons { font-size: 20px; }
+
+    .header-notification-wrap { position: relative; display: inline-flex; }
+
+    .notification-badge {
+      position: absolute; top: 0; right: 0;
+      background: #027BE3; color: #fff; font-size: 10px; font-weight: 700;
+      padding: 1px 5px; border-radius: 4px; min-width: 16px; height: 16px;
+      line-height: 14px; text-align: center; transform: translate(30%, -30%);
+    }
+
+    .header-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #ff56a1; color: #fff; display: flex;
+      align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px;
+    }
+
+    .header-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #3E4956;
+      padding: 4px;
+    }
+
+    .header-hamburger .material-icons {
+      font-size: 24px;
+    }
+
+    /* ============================================================
+       MAIN CONTENT
+    ============================================================ */
+    .main-content {
+      padding-top: 61px;
+      padding-left: 57px;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 24px 28px;
+    }
+
+    /* ============================================================
+       PAGE TITLE
+    ============================================================ */
+    .page-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 500;
+      color: #3E4956;
+    }
+
+    .page-title-sub {
+      font-size: 13px;
+      color: #79899D;
+      margin-top: 2px;
+    }
+
+    /* ============================================================
+       STATS SUMMARY BAR
+    ============================================================ */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .stat-mini {
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px 20px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-mini:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .stat-mini-icon {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-mini-icon .material-icons {
+      font-size: 22px;
+      color: #fff;
+    }
+
+    .stat-mini-icon.purple { background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+    .stat-mini-icon.green { background: linear-gradient(135deg, #21BA45, #16a338); }
+    .stat-mini-icon.blue { background: linear-gradient(135deg, #027BE3, #0262b5); }
+    .stat-mini-icon.pink { background: linear-gradient(135deg, #ff56a1, #d6006e); }
+
+    .stat-mini-info { flex: 1; }
+
+    .stat-mini-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #79899D;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 2px;
+    }
+
+    .stat-mini-value {
+      font-size: 24px;
+      font-weight: 300;
+      color: #1D1D1D;
+      line-height: 1.2;
+    }
+
+    /* ============================================================
+       ACTION BAR
+    ============================================================ */
+    .action-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary-pink {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ff56a1;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 9px 20px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary-pink:hover { background: #e0408a; }
+    .btn-primary-pink .material-icons { font-size: 18px; }
+
+    .search-input-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 320px;
+    }
+
+    .search-input-wrap .material-icons {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #79899D;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 9px 12px 9px 38px;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      color: #3E4956;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input::placeholder { color: #79899D; }
+    .search-input:focus { border-color: #ff56a1; }
+
+    .filter-select {
+      padding: 9px 32px 9px 12px;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      color: #3E4956;
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2379899D' d='M3 5l3 3 3-3z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 12px;
+      transition: border-color 0.2s;
+    }
+
+    .filter-select:focus { border-color: #ff56a1; }
+
+    .view-toggle {
+      display: flex;
+      align-items: center;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-left: auto;
+    }
+
+    .view-toggle-btn {
+      background: #fff;
+      border: none;
+      padding: 8px 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #79899D;
+      transition: all 0.2s;
+    }
+
+    .view-toggle-btn.active {
+      background: #ff56a1;
+      color: #fff;
+    }
+
+    .view-toggle-btn:not(.active):hover {
+      background: #f8fafc;
+      color: #3E4956;
+    }
+
+    .view-toggle-btn .material-icons { font-size: 18px; }
+
+    .view-toggle-btn + .view-toggle-btn {
+      border-left: 1px solid #E2E8F0;
+    }
+
+    /* ============================================================
+       LIVE CARDS
+    ============================================================ */
+    .lives-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .live-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .live-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .live-card-thumb {
+      width: 80px;
+      height: 60px;
+      min-width: 80px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .live-card-thumb-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+    }
+
+    .live-card-thumb-bg.pink-gradient {
+      background: linear-gradient(135deg, #ff56a1 0%, #d6006e 100%);
+    }
+
+    .live-card-thumb-bg.blue-gradient {
+      background: linear-gradient(135deg, #027BE3, #0262b5);
+    }
+
+    .live-card-thumb-bg.grey-gradient {
+      background: linear-gradient(135deg, #9CA3AF, #6B7280);
+    }
+
+    .live-card-thumb .material-icons {
+      position: relative;
+      z-index: 1;
+      color: rgba(255,255,255,0.85);
+      font-size: 28px;
+    }
+
+    .live-card-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .live-card-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .live-card-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #3E4956;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Status Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .badge-live {
+      background: #C10015;
+      color: #fff;
+    }
+
+    .badge-scheduled {
+      background: #027BE3;
+      color: #fff;
+    }
+
+    .badge-ended {
+      background: #9CA3AF;
+      color: #fff;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #fff;
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .live-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .live-card-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: #79899D;
+    }
+
+    .live-card-meta-item .material-icons {
+      font-size: 15px;
+    }
+
+    .live-card-meta-item strong {
+      font-weight: 600;
+      color: #3E4956;
+    }
+
+    .live-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .btn-card .material-icons { font-size: 16px; }
+
+    .btn-card-pink {
+      background: #ff56a1;
+      color: #fff;
+    }
+
+    .btn-card-pink:hover { background: #e0408a; }
+
+    .btn-card-outline {
+      background: #fff;
+      color: #3E4956;
+      border: 1px solid #E2E8F0;
+    }
+
+    .btn-card-outline:hover { border-color: #ff56a1; color: #ff56a1; }
+
+    .btn-icon-only {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      border: 1px solid #E2E8F0;
+      background: #fff;
+      color: #79899D;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 0;
+    }
+
+    .btn-icon-only .material-icons { font-size: 18px; }
+
+    .btn-icon-only:hover {
+      border-color: #ff56a1;
+      color: #ff56a1;
+      background: #fff5f9;
+    }
+
+    /* ============================================================
+       PAGINATION
+    ============================================================ */
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      padding: 12px 20px;
+    }
+
+    .pagination-info {
+      font-size: 13px;
+      color: #79899D;
+    }
+
+    .pagination-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-pagination {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 14px;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      background: #fff;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      color: #3E4956;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-pagination:hover {
+      border-color: #ff56a1;
+      color: #ff56a1;
+    }
+
+    .btn-pagination:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn-pagination:disabled:hover {
+      border-color: #E2E8F0;
+      color: #3E4956;
+    }
+
+    .btn-pagination .material-icons { font-size: 16px; }
+
+    /* ============================================================
+       PULSING LIVE INDICATOR (for AO VIVO card border)
+    ============================================================ */
+    .live-card.is-live {
+      border-left: 3px solid #C10015;
+    }
+
+    /* ============================================================
+       MOBILE SIDEBAR OVERLAY
+    ============================================================ */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 150;
+    }
+
+    .sidebar-overlay.show {
+      display: block;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1024px) {
+      .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: 220px;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar.open .sidebar-item-label,
+      .sidebar.open .sidebar-avatar-name,
+      .sidebar.open .sidebar-badge-novo {
+        opacity: 1;
+      }
+
+      .header {
+        left: 0;
+      }
+
+      .header-hamburger {
+        display: flex;
+      }
+
+      .main-content {
+        padding-left: 0;
+      }
+
+      .page {
+        padding: 16px;
+      }
+
+      .stats-bar {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat-mini {
+        padding: 14px 16px;
+      }
+
+      .stat-mini-value {
+        font-size: 20px;
+      }
+
+      .action-bar {
+        gap: 8px;
+      }
+
+      .search-input-wrap {
+        max-width: 100%;
+        order: 10;
+        flex-basis: 100%;
+      }
+
+      .view-toggle {
+        margin-left: 0;
+      }
+
+      .live-card {
+        flex-wrap: wrap;
+        padding: 14px 16px;
+        gap: 12px;
+      }
+
+      .live-card-thumb {
+        width: 64px;
+        height: 48px;
+        min-width: 64px;
+      }
+
+      .live-card-body {
+        min-width: calc(100% - 90px);
+      }
+
+      .live-card-actions {
+        width: 100%;
+        justify-content: flex-end;
+        padding-top: 8px;
+        border-top: 1px solid #f0f0f0;
+      }
+
+      .live-card-title {
+        font-size: 14px;
+      }
+
+      .header-btn > span { display: none; }
+
+      .header-breadcrumb { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-mini {
+        padding: 12px 14px;
+      }
+
+      .stat-mini-value {
+        font-size: 18px;
+      }
+
+      .live-card {
+        padding: 12px 14px;
+      }
+
+      .live-card-thumb {
+        width: 56px;
+        height: 42px;
+        min-width: 56px;
+      }
+
+      .live-card-meta {
+        gap: 10px;
+      }
+
+      .live-card-meta-item {
+        font-size: 11px;
+      }
+
+      .live-card-actions {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .btn-card {
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+
+      .page-title {
+        font-size: 18px;
+      }
+
+      .pagination-bar {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+
+      .btn-primary-pink {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     SIDEBAR
+============================================================ -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
+  <!-- Avatar -->
+  <div class="sidebar-avatar">
+    <div class="sidebar-avatar-circle">DAI</div>
+    <span class="sidebar-avatar-name">LOJADAICALMON</span>
+  </div>
+
+  <!-- Nav Items -->
+  <div class="sidebar-nav">
+    <a href="dashboard.html" class="sidebar-item" title="Homepage">
+      <i class="material-icons">home</i>
+      <span class="sidebar-item-label">Homepage</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Minha Loja">
+      <i class="material-icons">store</i>
+      <span class="sidebar-item-label">Minha Loja</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Meus Favoritos">
+      <i class="material-icons">thumb_up</i>
+      <span class="sidebar-item-label">Meus Favoritos</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Minha Carteira">
+      <i class="material-icons">wallet</i>
+      <span class="sidebar-item-label">Minha Carteira</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Minhas Vendas">
+      <i class="material-icons">shopping_cart</i>
+      <span class="sidebar-item-label">Minhas Vendas</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Live Commerce items -->
+    <a href="minhas-lives.html" class="sidebar-item active" title="Minhas Lives">
+      <i class="material-icons">videocam</i>
+      <span class="sidebar-item-label">Minhas Lives</span>
+      <span class="sidebar-badge-novo">NOVO</span>
+    </a>
+    <a href="criar-live.html" class="sidebar-item" title="Criar Live">
+      <i class="material-icons">add_circle</i>
+      <span class="sidebar-item-label">Criar Live</span>
+      <span class="sidebar-badge-novo">NOVO</span>
+    </a>
+    <a href="compartilhar-live.html" class="sidebar-item" title="Compartilhar">
+      <i class="material-icons">share</i>
+      <span class="sidebar-item-label">Compartilhar</span>
+      <span class="sidebar-badge-novo">NOVO</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <a href="#" class="sidebar-item" title="FAQ">
+      <i class="material-icons">help</i>
+      <span class="sidebar-item-label">FAQ</span>
+    </a>
+  </div>
+
+  <!-- Bottom -->
+  <div class="sidebar-bottom">
+    <a href="#" class="sidebar-item" title="Sair">
+      <i class="material-icons">logout</i>
+      <span class="sidebar-item-label">Sair</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header class="header">
+  <div class="header-left">
+    <button class="header-hamburger" onclick="toggleSidebar()">
+      <i class="material-icons">menu</i>
+    </button>
+    <div class="header-brand">OBOTICARIO</div>
+    <div class="header-breadcrumb">
+      <a href="dashboard.html">Homepage</a> / <span>Minhas Lives</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="header-btn">
+      <span>Meu Espaco</span>
+      <i class="material-icons" style="font-size:16px;">expand_more</i>
+    </button>
+    <div class="header-notification-wrap">
+      <button class="header-btn" style="padding:6px 8px;">
+        <i class="material-icons">notifications</i>
+      </button>
+      <span class="notification-badge">10</span>
+    </div>
+    <div class="header-avatar">DAI</div>
+  </div>
+</header>
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================ -->
+<main class="main-content">
+  <div class="page">
+
+    <!-- Page Title -->
+    <div class="page-title-row">
+      <div>
+        <h1 class="page-title">Minhas Lives</h1>
+        <p class="page-title-sub">Gerencie suas transmissoes ao vivo e acompanhe resultados</p>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         STATS SUMMARY BAR
+    ======================================================== -->
+    <section class="stats-bar">
+      <div class="stat-mini">
+        <div class="stat-mini-icon purple">
+          <i class="material-icons">videocam</i>
+        </div>
+        <div class="stat-mini-info">
+          <div class="stat-mini-label">Total de Lives</div>
+          <div class="stat-mini-value">12</div>
+        </div>
+      </div>
+
+      <div class="stat-mini">
+        <div class="stat-mini-icon green">
+          <i class="material-icons">fiber_manual_record</i>
+        </div>
+        <div class="stat-mini-info">
+          <div class="stat-mini-label">Ao Vivo Agora</div>
+          <div class="stat-mini-value" style="color:#21BA45;">1</div>
+        </div>
+      </div>
+
+      <div class="stat-mini">
+        <div class="stat-mini-icon blue">
+          <i class="material-icons">schedule</i>
+        </div>
+        <div class="stat-mini-info">
+          <div class="stat-mini-label">Agendadas</div>
+          <div class="stat-mini-value">3</div>
+        </div>
+      </div>
+
+      <div class="stat-mini">
+        <div class="stat-mini-icon pink">
+          <i class="material-icons">payments</i>
+        </div>
+        <div class="stat-mini-info">
+          <div class="stat-mini-label">Total Faturamento</div>
+          <div class="stat-mini-value">R$ 14.850</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         ACTION BAR
+    ======================================================== -->
+    <section class="action-bar">
+      <a href="criar-live.html" class="btn-primary-pink">
+        <i class="material-icons">add_circle</i>
+        Criar Nova Live
+      </a>
+
+      <div class="search-input-wrap">
+        <i class="material-icons">search</i>
+        <input type="text" class="search-input" placeholder="Buscar lives...">
+      </div>
+
+      <select class="filter-select">
+        <option value="todos">Status: Todos</option>
+        <option value="ao-vivo">Ao Vivo</option>
+        <option value="agendada">Agendada</option>
+        <option value="encerrada">Encerrada</option>
+      </select>
+
+      <div class="view-toggle">
+        <button class="view-toggle-btn active" title="Lista">
+          <i class="material-icons">view_list</i>
+        </button>
+        <button class="view-toggle-btn" title="Grade">
+          <i class="material-icons">grid_view</i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         LIVES LIST
+    ======================================================== -->
+    <section class="lives-list">
+
+      <!-- Live 1 - AO VIVO -->
+      <article class="live-card is-live">
+        <div class="live-card-thumb">
+          <div class="live-card-thumb-bg pink-gradient"></div>
+          <i class="material-icons">play_arrow</i>
+        </div>
+        <div class="live-card-body">
+          <div class="live-card-title-row">
+            <span class="live-card-title">Especial Kit Lily Blanche - Noite de Beleza</span>
+            <span class="badge badge-live">
+              <span class="badge-dot"></span>
+              AO VIVO
+            </span>
+          </div>
+          <div class="live-card-meta">
+            <span class="live-card-meta-item">
+              <i class="material-icons">schedule</i>
+              Iniciou ha 45 min
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">visibility</i>
+              <strong>234</strong> espectadores
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">shopping_cart</i>
+              <strong>R$ 2.890</strong>
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">inventory_2</i>
+              5 produtos
+            </span>
+          </div>
+        </div>
+        <div class="live-card-actions">
+          <a href="sala-live.html" class="btn-card btn-card-pink">
+            <i class="material-icons">login</i>
+            Entrar na Sala
+          </a>
+          <button class="btn-icon-only" title="Compartilhar">
+            <i class="material-icons">share</i>
+          </button>
+        </div>
+      </article>
+
+      <!-- Live 2 - AGENDADA -->
+      <article class="live-card">
+        <div class="live-card-thumb">
+          <div class="live-card-thumb-bg blue-gradient"></div>
+          <i class="material-icons">event</i>
+        </div>
+        <div class="live-card-body">
+          <div class="live-card-title-row">
+            <span class="live-card-title">Lancamento Egeo Dolce - Colecao Primavera</span>
+            <span class="badge badge-scheduled">AGENDADA</span>
+          </div>
+          <div class="live-card-meta">
+            <span class="live-card-meta-item">
+              <i class="material-icons">calendar_today</i>
+              28/02/2026 as 19:00
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">inventory_2</i>
+              8 produtos
+            </span>
+          </div>
+        </div>
+        <div class="live-card-actions">
+          <a href="#" class="btn-card btn-card-outline">
+            <i class="material-icons">edit</i>
+            Editar
+          </a>
+          <button class="btn-icon-only" title="Cancelar">
+            <i class="material-icons">cancel</i>
+          </button>
+        </div>
+      </article>
+
+      <!-- Live 3 - AGENDADA -->
+      <article class="live-card">
+        <div class="live-card-thumb">
+          <div class="live-card-thumb-bg blue-gradient"></div>
+          <i class="material-icons">event</i>
+        </div>
+        <div class="live-card-body">
+          <div class="live-card-title-row">
+            <span class="live-card-title">Mega Promocao Nativa Spa - Dia das Maes</span>
+            <span class="badge badge-scheduled">AGENDADA</span>
+          </div>
+          <div class="live-card-meta">
+            <span class="live-card-meta-item">
+              <i class="material-icons">calendar_today</i>
+              08/03/2026 as 15:00
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">inventory_2</i>
+              12 produtos
+            </span>
+          </div>
+        </div>
+        <div class="live-card-actions">
+          <a href="#" class="btn-card btn-card-outline">
+            <i class="material-icons">edit</i>
+            Editar
+          </a>
+          <button class="btn-icon-only" title="Cancelar">
+            <i class="material-icons">cancel</i>
+          </button>
+        </div>
+      </article>
+
+      <!-- Live 4 - ENCERRADA -->
+      <article class="live-card">
+        <div class="live-card-thumb">
+          <div class="live-card-thumb-bg grey-gradient"></div>
+          <i class="material-icons">replay</i>
+        </div>
+        <div class="live-card-body">
+          <div class="live-card-title-row">
+            <span class="live-card-title">Black Friday Boticario - Super Ofertas</span>
+            <span class="badge badge-ended">ENCERRADA</span>
+          </div>
+          <div class="live-card-meta">
+            <span class="live-card-meta-item">
+              <i class="material-icons">calendar_today</i>
+              22/02/2026
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">timer</i>
+              1h 32min
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">visibility</i>
+              <strong>1.245</strong>
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">shopping_cart</i>
+              <strong>R$ 8.340</strong>
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">trending_up</i>
+              <strong style="color:#21BA45;">12.4%</strong> conversao
+            </span>
+          </div>
+        </div>
+        <div class="live-card-actions">
+          <a href="#" class="btn-card btn-card-outline">
+            <i class="material-icons">assessment</i>
+            Ver Relatorio
+          </a>
+          <button class="btn-icon-only" title="Replay">
+            <i class="material-icons">replay</i>
+          </button>
+        </div>
+      </article>
+
+      <!-- Live 5 - ENCERRADA -->
+      <article class="live-card">
+        <div class="live-card-thumb">
+          <div class="live-card-thumb-bg grey-gradient"></div>
+          <i class="material-icons">replay</i>
+        </div>
+        <div class="live-card-body">
+          <div class="live-card-title-row">
+            <span class="live-card-title">Kits Presente - Especial Carnaval</span>
+            <span class="badge badge-ended">ENCERRADA</span>
+          </div>
+          <div class="live-card-meta">
+            <span class="live-card-meta-item">
+              <i class="material-icons">calendar_today</i>
+              15/02/2026
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">timer</i>
+              58min
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">visibility</i>
+              <strong>567</strong>
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">shopping_cart</i>
+              <strong>R$ 3.620</strong>
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">trending_up</i>
+              <strong style="color:#21BA45;">8.7%</strong> conversao
+            </span>
+          </div>
+        </div>
+        <div class="live-card-actions">
+          <a href="#" class="btn-card btn-card-outline">
+            <i class="material-icons">assessment</i>
+            Ver Relatorio
+          </a>
+          <button class="btn-icon-only" title="Replay">
+            <i class="material-icons">replay</i>
+          </button>
+        </div>
+      </article>
+
+      <!-- Live 6 - ENCERRADA -->
+      <article class="live-card">
+        <div class="live-card-thumb">
+          <div class="live-card-thumb-bg grey-gradient"></div>
+          <i class="material-icons">replay</i>
+        </div>
+        <div class="live-card-body">
+          <div class="live-card-title-row">
+            <span class="live-card-title">Tutorial Maquiagem com Quem Disse, Berenice?</span>
+            <span class="badge badge-ended">ENCERRADA</span>
+          </div>
+          <div class="live-card-meta">
+            <span class="live-card-meta-item">
+              <i class="material-icons">calendar_today</i>
+              10/02/2026
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">timer</i>
+              45min
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">visibility</i>
+              <strong>389</strong>
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">shopping_cart</i>
+              <strong>R$ 1.890</strong>
+            </span>
+            <span class="live-card-meta-item">
+              <i class="material-icons">trending_up</i>
+              <strong style="color:#21BA45;">6.2%</strong> conversao
+            </span>
+          </div>
+        </div>
+        <div class="live-card-actions">
+          <a href="#" class="btn-card btn-card-outline">
+            <i class="material-icons">assessment</i>
+            Ver Relatorio
+          </a>
+          <button class="btn-icon-only" title="Replay">
+            <i class="material-icons">replay</i>
+          </button>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- ========================================================
+         PAGINATION
+    ======================================================== -->
+    <div class="pagination-bar">
+      <span class="pagination-info">Mostrando 1-6 de 12 lives</span>
+      <div class="pagination-buttons">
+        <button class="btn-pagination" disabled>
+          <i class="material-icons">chevron_left</i>
+          Anterior
+        </button>
+        <button class="btn-pagination">
+          Proxima
+          <i class="material-icons">chevron_right</i>
+        </button>
+      </div>
+    </div>
+
+    <div style="height:24px;"></div>
+  </div>
+</main>
+
+<script>
+  function toggleSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+
+  // View toggle
+  document.querySelectorAll('.view-toggle-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.view-toggle-btn').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      this.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>

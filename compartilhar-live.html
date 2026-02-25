@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flip - Compartilhar Live | LOJADAICALMON</title>
+
+  <!-- Google Fonts - Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Roboto, -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #f5f5f5;
+      color: #3E4956;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ============================================================
+       SIDEBAR
+    ============================================================ */
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 57px;
+      background: #222222;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .sidebar:hover { width: 220px; }
+
+    .sidebar-avatar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      min-height: 57px;
+    }
+
+    .sidebar-avatar-circle {
+      width: 30px; height: 30px; min-width: 30px;
+      border-radius: 50%;
+      background: #ff56a1;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .sidebar-avatar-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #F7F7F7;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .sidebar:hover .sidebar-avatar-name { opacity: 1; }
+
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 6px 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      color: #8C8C8C;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      position: relative;
+      min-height: 42px;
+      text-decoration: none;
+    }
+
+    .sidebar-item:hover {
+      color: #F7F7F7;
+      background: #2F3235;
+    }
+
+    .sidebar-item.active {
+      color: #F7F7F7;
+      background: #2F3235;
+    }
+
+    .sidebar-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: #F7F7F7;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .sidebar-item .material-icons {
+      font-size: 22px;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .sidebar-item-label {
+      font-size: 13px;
+      font-weight: 400;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .sidebar:hover .sidebar-item-label { opacity: 1; }
+
+    .sidebar-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 6px 12px;
+    }
+
+    .sidebar-badge-novo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ff56a1;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 3px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      line-height: 1;
+      opacity: 0;
+      transition: opacity 0.2s;
+      margin-left: auto;
+    }
+
+    .sidebar:hover .sidebar-badge-novo { opacity: 1; }
+
+    .sidebar-bottom {
+      padding: 6px 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .header {
+      position: fixed;
+      top: 0; left: 57px; right: 0;
+      height: 61px;
+      background: #fff;
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .header-brand {
+      font-size: 16px;
+      font-weight: 900;
+      color: #3E4956;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+    }
+
+    .header-breadcrumb {
+      font-size: 12px;
+      color: #79899D;
+    }
+
+    .header-breadcrumb a {
+      color: #79899D;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .header-breadcrumb a:hover { color: #ff56a1; }
+
+    .header-breadcrumb span {
+      color: #3E4956;
+      font-weight: 500;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: #3E4956;
+    }
+
+    .header-btn:hover { background: #f8fafc; }
+    .header-btn .material-icons { font-size: 20px; }
+
+    .header-notification-wrap { position: relative; display: inline-flex; }
+
+    .notification-badge {
+      position: absolute; top: 0; right: 0;
+      background: #027BE3; color: #fff; font-size: 10px; font-weight: 700;
+      padding: 1px 5px; border-radius: 4px; min-width: 16px; height: 16px;
+      line-height: 14px; text-align: center; transform: translate(30%, -30%);
+    }
+
+    .header-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #ff56a1; color: #fff; display: flex;
+      align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px;
+    }
+
+    .header-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #3E4956;
+      padding: 4px;
+    }
+
+    .header-hamburger .material-icons { font-size: 24px; }
+
+    /* ============================================================
+       MAIN CONTENT
+    ============================================================ */
+    .main-content {
+      padding-top: 61px;
+      padding-left: 57px;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 24px 28px;
+    }
+
+    /* ============================================================
+       PAGE HEADER INFO CARD
+    ============================================================ */
+    .live-info-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .live-info-main {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .live-info-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .live-info-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1D1D1D;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .badge-scheduled { background: #027BE3; color: #fff; }
+    .badge-live { background: #C10015; color: #fff; }
+
+    .live-info-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: #79899D;
+    }
+
+    .live-info-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .live-info-meta-item .material-icons {
+      font-size: 16px;
+    }
+
+    .live-info-products {
+      display: flex;
+      align-items: center;
+      gap: -8px;
+      flex-shrink: 0;
+    }
+
+    .live-info-product-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 2px solid #fff;
+      margin-left: -8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .live-info-product-thumb:first-child {
+      margin-left: 0;
+    }
+
+    /* ============================================================
+       SHARE LAYOUT - 2 COLUMNS
+    ============================================================ */
+    .share-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    /* ============================================================
+       CARD BASE
+    ============================================================ */
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      padding: 24px;
+    }
+
+    .card-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #79899D;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #3E4956;
+      margin-bottom: 6px;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: #79899D;
+      margin-bottom: 16px;
+    }
+
+    /* ============================================================
+       QR CODE SECTION
+    ============================================================ */
+    .qr-section {
+      text-align: center;
+    }
+
+    .qr-code-container {
+      width: 240px;
+      height: 240px;
+      margin: 0 auto 16px;
+      background: #fff;
+      border-radius: 12px;
+      border: 2px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(11, 1fr);
+      grid-template-rows: repeat(11, 1fr);
+      gap: 2px;
+      width: 200px;
+      height: 200px;
+      padding: 8px;
+    }
+
+    .qr-cell {
+      border-radius: 1px;
+    }
+
+    .qr-cell.dark { background: #1D1D1D; }
+    .qr-cell.light { background: #fff; }
+    .qr-cell.pink { background: #ff56a1; }
+
+    .qr-scan-label {
+      font-size: 13px;
+      color: #79899D;
+      margin-bottom: 16px;
+    }
+
+    .qr-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: #3E4956;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      padding: 9px 18px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-outline:hover { border-color: #ff56a1; color: #ff56a1; }
+    .btn-outline .material-icons { font-size: 16px; }
+
+    .btn-primary {
+      background: #ff56a1;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 9px 18px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover { background: #e0408a; }
+    .btn-primary .material-icons { font-size: 16px; }
+
+    .qr-color-selector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .qr-color-label {
+      font-size: 12px;
+      color: #79899D;
+    }
+
+    .qr-color-option {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #E2E8F0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .qr-color-option:hover { transform: scale(1.15); }
+
+    .qr-color-option.active {
+      border-color: #ff56a1;
+      box-shadow: 0 0 0 2px rgba(255,86,161,0.25);
+    }
+
+    .qr-color-option.white { background: #fff; }
+    .qr-color-option.pink { background: #ff56a1; }
+    .qr-color-option.dark { background: #222; }
+    .qr-color-option.brand { background: linear-gradient(135deg, #ff56a1, #d6006e); }
+
+    /* ============================================================
+       LINK SECTION
+    ============================================================ */
+    .link-section {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #E2E8F0;
+    }
+
+    .link-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+      margin-bottom: 10px;
+    }
+
+    .link-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: none;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 13px;
+      color: #3E4956;
+      background: #f8fafc;
+      outline: none;
+      min-width: 0;
+    }
+
+    .link-copy-btn {
+      background: #ff56a1;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .link-copy-btn:hover { background: #e0408a; }
+    .link-copy-btn .material-icons { font-size: 16px; }
+
+    .link-copied-feedback {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: #21BA45;
+      font-weight: 500;
+    }
+
+    .link-copied-feedback .material-icons {
+      font-size: 15px;
+    }
+
+    .short-link {
+      font-size: 12px;
+      color: #79899D;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .short-link strong {
+      color: #3E4956;
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    /* ============================================================
+       RIGHT COLUMN
+    ============================================================ */
+    .right-col-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ============================================================
+       SOCIAL SHARE
+    ============================================================ */
+    .social-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      border-left-width: 4px;
+    }
+
+    .social-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .social-btn-icon {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .social-btn-icon.whatsapp { background: #25D366; }
+    .social-btn-icon.facebook { background: #1877F2; }
+    .social-btn-icon.instagram { background: linear-gradient(135deg, #F58529, #DD2A7B, #8134AF); }
+    .social-btn-icon.telegram { background: #0088cc; }
+
+    .social-btn-content { flex: 1; min-width: 0; }
+
+    .social-btn-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #3E4956;
+    }
+
+    .social-btn-desc {
+      font-size: 11px;
+      color: #79899D;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .social-btn-arrow {
+      color: #79899D;
+      font-size: 18px;
+    }
+
+    .social-btn.whatsapp { border-left-color: #25D366; }
+    .social-btn.facebook { border-left-color: #1877F2; }
+    .social-btn.instagram { border-left-color: #DD2A7B; }
+    .social-btn.telegram { border-left-color: #0088cc; }
+
+    /* ============================================================
+       COUPON SECTION
+    ============================================================ */
+    .coupon-display {
+      border: 2px dashed rgba(255,86,161,0.35);
+      border-radius: 10px;
+      padding: 20px;
+      background: rgba(255,86,161,0.03);
+      text-align: center;
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .coupon-code {
+      font-size: 28px;
+      font-weight: 700;
+      color: #ff56a1;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+
+    .coupon-discount {
+      font-size: 14px;
+      font-weight: 500;
+      color: #3E4956;
+      margin-bottom: 8px;
+    }
+
+    .coupon-frete-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(33,186,69,0.1);
+      color: #21BA45;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
+    }
+
+    .coupon-validity {
+      font-size: 12px;
+      color: #79899D;
+    }
+
+    .coupon-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .coupon-edit-link {
+      font-size: 13px;
+      color: #79899D;
+      cursor: pointer;
+      transition: color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .coupon-edit-link:hover { color: #ff56a1; }
+    .coupon-edit-link .material-icons { font-size: 14px; }
+
+    /* ============================================================
+       EMBED SECTION
+    ============================================================ */
+    .embed-section {
+      margin-bottom: 24px;
+    }
+
+    .embed-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .embed-code {
+      background: #1E1E1E;
+      color: #21BA45;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: 'Roboto Mono', Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre;
+      margin-bottom: 8px;
+    }
+
+    .embed-code .tag { color: #569CD6; }
+    .embed-code .attr { color: #9CDCFE; }
+    .embed-code .val { color: #CE9178; }
+
+    .embed-hint {
+      font-size: 12px;
+      color: #79899D;
+    }
+
+    .embed-preview {
+      margin-top: 16px;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .embed-preview-header {
+      background: #f5f5f5;
+      padding: 8px 12px;
+      font-size: 11px;
+      color: #79899D;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .embed-preview-body {
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .embed-preview-mockup {
+      width: 160px;
+      height: 240px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #ff56a1, #d6006e);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 10px;
+      gap: 6px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .embed-preview-mockup .material-icons {
+      font-size: 28px;
+      opacity: 0.8;
+    }
+
+    .embed-preview-mockup-title {
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .embed-preview-mockup-sub {
+      font-size: 9px;
+      opacity: 0.7;
+    }
+
+    /* ============================================================
+       PROMO CARD (DIVULGACAO)
+    ============================================================ */
+    .promo-card-section {
+      margin-bottom: 24px;
+    }
+
+    .promo-card-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .promo-card-visual {
+      background: linear-gradient(135deg, #ff56a1 0%, #d6006e 40%, #8a0044 100%);
+      border-radius: 16px;
+      padding: 40px 36px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .promo-card-visual::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 180px; height: 180px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+
+    .promo-card-visual::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; left: -30px;
+      width: 120px; height: 120px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+
+    .promo-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .promo-card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+
+    .promo-card-badge .material-icons { font-size: 16px; }
+
+    .promo-card-title {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .promo-card-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
+
+    .promo-card-date {
+      font-size: 14px;
+      opacity: 0.75;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .promo-card-date .material-icons { font-size: 16px; }
+
+    .promo-card-footer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .promo-card-qr-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+    }
+
+    .promo-card-qr {
+      width: 90px;
+      height: 90px;
+      background: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .promo-card-qr .material-icons {
+      font-size: 50px;
+      color: #1D1D1D;
+    }
+
+    .promo-card-products {
+      display: flex;
+      gap: -4px;
+    }
+
+    .promo-card-product-thumb {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.5);
+      margin-left: -6px;
+    }
+
+    .promo-card-product-thumb:first-child { margin-left: 0; }
+
+    .promo-card-info {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .promo-card-coupon-text {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .promo-card-discount-text {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .promo-card-link-text {
+      font-size: 11px;
+      opacity: 0.6;
+      margin-bottom: 10px;
+    }
+
+    .promo-card-branding {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      opacity: 0.5;
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       ANALYTICS BAR
+    ============================================================ */
+    .analytics-section {
+      margin-bottom: 24px;
+    }
+
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .analytics-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: #DCD6D6 0px 0px 2px 0px;
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .analytics-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .analytics-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .analytics-icon .material-icons { font-size: 18px; color: #fff; }
+
+    .analytics-icon.views { background: linear-gradient(135deg, #027BE3, #0262b5); }
+    .analytics-icon.clicks { background: linear-gradient(135deg, #ff56a1, #d6006e); }
+    .analytics-icon.conversions { background: linear-gradient(135deg, #21BA45, #16a338); }
+    .analytics-icon.rate { background: linear-gradient(135deg, #F2C037, #d9a820); }
+
+    .analytics-value {
+      font-size: 26px;
+      font-weight: 300;
+      color: #1D1D1D;
+      margin-bottom: 2px;
+    }
+
+    .analytics-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #79899D;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .analytics-sublabel {
+      font-size: 11px;
+      color: #79899D;
+      margin-top: 2px;
+    }
+
+    /* ============================================================
+       MOBILE SIDEBAR OVERLAY
+    ============================================================ */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 150;
+    }
+
+    .sidebar-overlay.show { display: block; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1024px) {
+      .share-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .analytics-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: 220px;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar.open .sidebar-item-label,
+      .sidebar.open .sidebar-avatar-name,
+      .sidebar.open .sidebar-badge-novo {
+        opacity: 1;
+      }
+
+      .header { left: 0; }
+      .header-hamburger { display: flex; }
+      .main-content { padding-left: 0; }
+
+      .page { padding: 16px; }
+
+      .share-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .social-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .social-btn {
+        flex-direction: column;
+        text-align: center;
+        padding: 14px 10px;
+        gap: 8px;
+      }
+
+      .social-btn-content { text-align: center; }
+
+      .social-btn-desc { display: none; }
+
+      .social-btn-arrow { display: none; }
+
+      .analytics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .promo-card-visual {
+        padding: 28px 24px;
+      }
+
+      .promo-card-title {
+        font-size: 22px;
+      }
+
+      .promo-card-subtitle {
+        font-size: 16px;
+      }
+
+      .header-btn > span { display: none; }
+      .header-breadcrumb { display: none; }
+
+      .live-info-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .qr-code-container {
+        width: 180px;
+        height: 180px;
+      }
+
+      .qr-grid {
+        width: 150px;
+        height: 150px;
+      }
+
+      .promo-card-visual {
+        padding: 24px 20px;
+      }
+
+      .promo-card-title { font-size: 20px; }
+
+      .promo-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .promo-card-info { text-align: left; }
+
+      .promo-card-qr {
+        width: 70px;
+        height: 70px;
+      }
+
+      .promo-card-qr .material-icons { font-size: 40px; }
+
+      .analytics-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .analytics-value { font-size: 22px; }
+
+      .social-buttons {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .coupon-code { font-size: 22px; }
+
+      .qr-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .live-info-title { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     SIDEBAR
+============================================================ -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
+  <!-- Avatar -->
+  <div class="sidebar-avatar">
+    <div class="sidebar-avatar-circle">DAI</div>
+    <span class="sidebar-avatar-name">LOJADAICALMON</span>
+  </div>
+
+  <!-- Nav Items -->
+  <div class="sidebar-nav">
+    <a href="dashboard.html" class="sidebar-item" title="Homepage">
+      <i class="material-icons">home</i>
+      <span class="sidebar-item-label">Homepage</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Minha Loja">
+      <i class="material-icons">store</i>
+      <span class="sidebar-item-label">Minha Loja</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Meus Favoritos">
+      <i class="material-icons">thumb_up</i>
+      <span class="sidebar-item-label">Meus Favoritos</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Minha Carteira">
+      <i class="material-icons">wallet</i>
+      <span class="sidebar-item-label">Minha Carteira</span>
+    </a>
+    <a href="#" class="sidebar-item" title="Minhas Vendas">
+      <i class="material-icons">shopping_cart</i>
+      <span class="sidebar-item-label">Minhas Vendas</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Live Commerce items -->
+    <a href="minhas-lives.html" class="sidebar-item" title="Minhas Lives">
+      <i class="material-icons">videocam</i>
+      <span class="sidebar-item-label">Minhas Lives</span>
+      <span class="sidebar-badge-novo">NOVO</span>
+    </a>
+    <a href="criar-live.html" class="sidebar-item" title="Criar Live">
+      <i class="material-icons">add_circle</i>
+      <span class="sidebar-item-label">Criar Live</span>
+      <span class="sidebar-badge-novo">NOVO</span>
+    </a>
+    <a href="compartilhar-live.html" class="sidebar-item active" title="Compartilhar">
+      <i class="material-icons">share</i>
+      <span class="sidebar-item-label">Compartilhar</span>
+      <span class="sidebar-badge-novo">NOVO</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <a href="#" class="sidebar-item" title="FAQ">
+      <i class="material-icons">help</i>
+      <span class="sidebar-item-label">FAQ</span>
+    </a>
+  </div>
+
+  <!-- Bottom -->
+  <div class="sidebar-bottom">
+    <a href="#" class="sidebar-item" title="Sair">
+      <i class="material-icons">logout</i>
+      <span class="sidebar-item-label">Sair</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header class="header">
+  <div class="header-left">
+    <button class="header-hamburger" onclick="toggleSidebar()">
+      <i class="material-icons">menu</i>
+    </button>
+    <div class="header-brand">OBOTICARIO</div>
+    <div class="header-breadcrumb">
+      <a href="dashboard.html">Homepage</a> / <a href="minhas-lives.html">Minhas Lives</a> / <span>Compartilhar Live</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="header-btn">
+      <span>Meu Espaco</span>
+      <i class="material-icons" style="font-size:16px;">expand_more</i>
+    </button>
+    <div class="header-notification-wrap">
+      <button class="header-btn" style="padding:6px 8px;">
+        <i class="material-icons">notifications</i>
+      </button>
+      <span class="notification-badge">10</span>
+    </div>
+    <div class="header-avatar">DAI</div>
+  </div>
+</header>
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================ -->
+<main class="main-content">
+  <div class="page">
+
+    <!-- ========================================================
+         LIVE INFO CARD
+    ======================================================== -->
+    <div class="live-info-card">
+      <div class="live-info-main">
+        <div class="live-info-title-row">
+          <h1 class="live-info-title">Especial Kit Lily Blanche - Noite de Beleza</h1>
+          <span class="badge badge-scheduled">AGENDADA</span>
+        </div>
+        <div class="live-info-meta">
+          <span class="live-info-meta-item">
+            <i class="material-icons">calendar_today</i>
+            28/02/2026 as 19:00
+          </span>
+          <span class="live-info-meta-item">
+            <i class="material-icons">inventory_2</i>
+            5 produtos selecionados
+          </span>
+          <span class="live-info-meta-item">
+            <i class="material-icons">local_offer</i>
+            Cupom: LIVE25OFF
+          </span>
+        </div>
+      </div>
+      <div class="live-info-products">
+        <img class="live-info-product-thumb" src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/5d76ce8a-55e4-4667-bc41-71ddf09a148a-bot-2024071018.jpg" alt="Combo L'eau de Lily">
+        <img class="live-info-product-thumb" src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2e945662-0a1f-4b71-bbce-d56c17bf6401-bot-2025030502.jpg" alt="Combo Lily Blanche">
+        <img class="live-info-product-thumb" src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2f161d48-d3a6-4c49-9fbe-8eed0400d422-bot-57882-l-eau-de-lily-blanche-body-spray-01.jpg" alt="Body Spray">
+        <img class="live-info-product-thumb" src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/ae6187eb-2dbc-4580-b916-d22b2bc6cfcd-bot-86895-l-eau-de-lily-blanche-01.jpg" alt="L'eau de Lily Blanche">
+        <img class="live-info-product-thumb" src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/73463997-b06a-40b2-afe9-dfe37d4b2879-bot-q2025030516.jpg" alt="Combo QDB Batons">
+      </div>
+    </div>
+
+    <!-- ========================================================
+         TWO-COLUMN SHARE LAYOUT
+    ======================================================== -->
+    <div class="share-layout">
+
+      <!-- LEFT COLUMN: QR Code + Link -->
+      <div class="card qr-section">
+        <div class="card-title">QR Code da Live</div>
+
+        <!-- QR Code Grid -->
+        <div class="qr-code-container">
+          <div class="qr-grid">
+            <!-- Row 1 - Position markers -->
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <!-- Row 2 -->
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell pink"></div>
+            <!-- Row 3 -->
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <!-- Row 4 -->
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <!-- Row 5 -->
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <!-- Row 6 -->
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <!-- Row 7 -->
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <!-- Row 8 -->
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <!-- Row 9 -->
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <!-- Row 10 -->
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell dark"></div>
+            <!-- Row 11 -->
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell pink"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+            <div class="qr-cell light"></div>
+            <div class="qr-cell dark"></div>
+          </div>
+        </div>
+
+        <p class="qr-scan-label">Escaneie para assistir a live</p>
+
+        <div class="qr-buttons">
+          <button class="btn-outline">
+            <i class="material-icons">download</i>
+            Baixar QR Code
+          </button>
+          <button class="btn-outline">
+            <i class="material-icons">phone_iphone</i>
+            Baixar para Stories
+          </button>
+        </div>
+
+        <div class="qr-color-selector">
+          <span class="qr-color-label">Fundo:</span>
+          <div class="qr-color-option white active"></div>
+          <div class="qr-color-option pink"></div>
+          <div class="qr-color-option dark"></div>
+          <div class="qr-color-option brand"></div>
+        </div>
+
+        <!-- Link Section -->
+        <div class="link-section">
+          <div class="card-title">Link da Live</div>
+          <div class="link-input-wrap">
+            <input type="text" class="link-input" value="https://go.flip.net.br/live/dai-lily-blanche-2026" readonly>
+            <button class="link-copy-btn">
+              <i class="material-icons">content_copy</i>
+              Copiar Link
+            </button>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+            <span class="link-copied-feedback">
+              <i class="material-icons">check_circle</i>
+              Link copiado!
+            </span>
+            <span class="short-link">
+              Link curto: <strong>flip.net/L/abc123</strong>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Social + Coupon + Embed -->
+      <div class="right-col-stack">
+
+        <!-- Social Share -->
+        <div class="card">
+          <div class="card-title">Compartilhar nas Redes</div>
+          <div class="social-buttons">
+            <a href="#" class="social-btn whatsapp">
+              <div class="social-btn-icon whatsapp">
+                <i class="fab fa-whatsapp"></i>
+              </div>
+              <div class="social-btn-content">
+                <div class="social-btn-label">Compartilhar no WhatsApp</div>
+                <div class="social-btn-desc">Venha assistir minha live de beleza! Descontos exclusivos com cupom LIVE25OFF...</div>
+              </div>
+              <i class="material-icons social-btn-arrow">chevron_right</i>
+            </a>
+            <a href="#" class="social-btn facebook">
+              <div class="social-btn-icon facebook">
+                <i class="fab fa-facebook-f"></i>
+              </div>
+              <div class="social-btn-content">
+                <div class="social-btn-label">Compartilhar no Facebook</div>
+                <div class="social-btn-desc">Publicar no seu perfil ou em grupos</div>
+              </div>
+              <i class="material-icons social-btn-arrow">chevron_right</i>
+            </a>
+            <a href="#" class="social-btn instagram">
+              <div class="social-btn-icon instagram">
+                <i class="fab fa-instagram"></i>
+              </div>
+              <div class="social-btn-content">
+                <div class="social-btn-label">Copiar para Instagram</div>
+                <div class="social-btn-desc">Ideal para Stories e Bio</div>
+              </div>
+              <i class="material-icons social-btn-arrow">chevron_right</i>
+            </a>
+            <a href="#" class="social-btn telegram">
+              <div class="social-btn-icon telegram">
+                <i class="fab fa-telegram-plane"></i>
+              </div>
+              <div class="social-btn-content">
+                <div class="social-btn-label">Compartilhar no Telegram</div>
+                <div class="social-btn-desc">Enviar para contatos e canais</div>
+              </div>
+              <i class="material-icons social-btn-arrow">chevron_right</i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Coupon Section -->
+        <div class="card">
+          <div class="card-title">Cupom da Live</div>
+          <div class="coupon-display">
+            <div class="coupon-code">LIVE25OFF</div>
+            <div class="coupon-discount">25% de desconto</div>
+            <div class="coupon-frete-badge">
+              <i class="material-icons" style="font-size:13px;">local_shipping</i>
+              Frete Gratis
+            </div>
+            <div class="coupon-validity">Valido durante a live</div>
+          </div>
+          <div class="coupon-actions">
+            <button class="btn-primary">
+              <i class="material-icons">content_copy</i>
+              Copiar Cupom
+            </button>
+            <a href="#" class="coupon-edit-link">
+              <i class="material-icons">edit</i>
+              Editar Cupom
+            </a>
+          </div>
+        </div>
+
+        <!-- Embed Code -->
+        <div class="card embed-section">
+          <div class="embed-header">
+            <div class="card-title" style="margin-bottom:0;">Incorporar no seu site</div>
+            <button class="btn-outline" style="padding:7px 14px; font-size:12px;">
+              <i class="material-icons">content_copy</i>
+              Copiar Codigo
+            </button>
+          </div>
+          <div class="embed-code"><span class="tag">&lt;iframe</span>
+  <span class="attr">src</span>=<span class="val">"https://go.flip.net.br/embed/live/dai-lily"</span>
+  <span class="attr">width</span>=<span class="val">"400"</span>
+  <span class="attr">height</span>=<span class="val">"600"</span>
+  <span class="attr">frameborder</span>=<span class="val">"0"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/iframe&gt;</span></div>
+          <p class="embed-hint">Copie e cole este codigo no seu site ou blog.</p>
+          <div class="embed-preview">
+            <div class="embed-preview-header">Preview do Embed</div>
+            <div class="embed-preview-body">
+              <div class="embed-preview-mockup">
+                <i class="material-icons">videocam</i>
+                <div class="embed-preview-mockup-title">Live Shopping</div>
+                <div class="embed-preview-mockup-sub">Kit Lily Blanche</div>
+                <div class="embed-preview-mockup-sub">400 x 600 px</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================
+         PROMO CARD (CARD DE DIVULGACAO)
+    ======================================================== -->
+    <div class="card promo-card-section">
+      <div class="promo-card-section-header">
+        <div class="card-title" style="margin-bottom:0;">Card de Divulgacao</div>
+        <button class="btn-primary">
+          <i class="material-icons">download</i>
+          Baixar Card
+        </button>
+      </div>
+
+      <div class="promo-card-visual">
+        <div class="promo-card-inner">
+          <div class="promo-card-badge">
+            <i class="material-icons">videocam</i>
+            LIVE SHOPPING
+          </div>
+
+          <div class="promo-card-title">Especial Kit Lily Blanche - Noite de Beleza</div>
+          <div class="promo-card-subtitle">Noite de Beleza</div>
+
+          <div class="promo-card-date">
+            <i class="material-icons">calendar_today</i>
+            28/02 as 19:00
+          </div>
+
+          <div style="display:flex; align-items:center; gap:4px; margin-bottom:20px;">
+            <img class="promo-card-product-thumb" src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/5d76ce8a-55e4-4667-bc41-71ddf09a148a-bot-2024071018.jpg" alt="Produto 1">
+            <img class="promo-card-product-thumb" src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2e945662-0a1f-4b71-bbce-d56c17bf6401-bot-2025030502.jpg" alt="Produto 2">
+            <img class="promo-card-product-thumb" src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/2f161d48-d3a6-4c49-9fbe-8eed0400d422-bot-57882-l-eau-de-lily-blanche-body-spray-01.jpg" alt="Produto 3">
+            <img class="promo-card-product-thumb" src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/ae6187eb-2dbc-4580-b916-d22b2bc6cfcd-bot-86895-l-eau-de-lily-blanche-01.jpg" alt="Produto 4">
+            <img class="promo-card-product-thumb" src="https://flipnet-assets.s3.sa-east-1.amazonaws.com/admin/public/users/products/117455/73463997-b06a-40b2-afe9-dfe37d4b2879-bot-q2025030516.jpg" alt="Produto 5">
+          </div>
+
+          <div class="promo-card-footer">
+            <div class="promo-card-qr-wrap">
+              <div class="promo-card-qr">
+                <i class="material-icons">qr_code_2</i>
+              </div>
+              <div style="font-size:12px; opacity:0.7;">
+                Assista ao vivo em<br>
+                <strong style="font-size:13px; opacity:1;">go.flip.net.br</strong>
+              </div>
+            </div>
+            <div class="promo-card-info">
+              <div class="promo-card-coupon-text">Cupom: LIVE25OFF</div>
+              <div class="promo-card-discount-text">15% OFF + Frete Gratis</div>
+              <div class="promo-card-branding">OBOTICARIO</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SHARE ANALYTICS
+    ======================================================== -->
+    <div class="analytics-section">
+      <div class="card-title" style="margin-bottom:14px;">Analytics de Compartilhamento</div>
+      <div class="analytics-grid">
+        <div class="analytics-card">
+          <div class="analytics-icon views">
+            <i class="material-icons">visibility</i>
+          </div>
+          <div class="analytics-value">234</div>
+          <div class="analytics-label">Visualizacoes</div>
+          <div class="analytics-sublabel">no link</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-icon clicks">
+            <i class="material-icons">touch_app</i>
+          </div>
+          <div class="analytics-value">45</div>
+          <div class="analytics-label">Cliques</div>
+          <div class="analytics-sublabel">no link</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-icon conversions">
+            <i class="material-icons">shopping_cart</i>
+          </div>
+          <div class="analytics-value">12</div>
+          <div class="analytics-label">Conversoes</div>
+          <div class="analytics-sublabel">compras</div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-icon rate">
+            <i class="material-icons">trending_up</i>
+          </div>
+          <div class="analytics-value">26.7%</div>
+          <div class="analytics-label">Taxa</div>
+          <div class="analytics-sublabel">conversao</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:24px;"></div>
+  </div>
+</main>
+
+<script>
+  function toggleSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+</script>
+
+</body>
+</html>
